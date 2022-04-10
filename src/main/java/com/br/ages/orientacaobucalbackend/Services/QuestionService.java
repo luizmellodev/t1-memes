@@ -52,17 +52,17 @@ public class QuestionService {
     /**
      * Update a question
      * @param questionId The id of the question to be updated
-     * @param text The updated text of the question
+     * @param questionText The updated text of the question
      */
     @Transactional
-    public void updateQuestion(Long questionId, String text) {
+    public void updateQuestion(Long questionId, String questionText) {
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new IllegalStateException(
                 "question with id " + questionId + " does not exist"));
 
         // TODO adicionar possíveis validações
 
-        if (text != null && text.length() > 0) {
-            question.setText(text);
+        if (questionText != null && questionText.length() > 0) {
+            question.setQuestionText(questionText);
         }
     }
 

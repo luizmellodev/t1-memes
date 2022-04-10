@@ -36,7 +36,7 @@ public class QuestionController {
     @PutMapping(path = "{questionId}")
     public void updateQuestion(
             @PathVariable("questionId") Long questionId,
-            @RequestParam(required = true) String text) {
-        questionService.updateQuestion(questionId, text);
+            @RequestParam(required = true) String questionText) {
+        questionService.updateQuestion(questionId, questionText);
     }
 }

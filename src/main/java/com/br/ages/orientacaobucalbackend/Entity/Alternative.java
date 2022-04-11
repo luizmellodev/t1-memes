@@ -6,22 +6,15 @@ import javax.persistence.*;
 @Table(name = "alternative")
 public class Alternative {
     @Id
-    @SequenceGenerator(
-            name="alternative_sequence",
-            sequenceName = "alternative_sequence",
-            allocationSize = 1
-    )
     @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "alternative_sequence"
+            strategy = GenerationType.IDENTITY
     )
-
-    //TODO criar relacionamento many-to-one
-//    @ManyToOne
-////    @JoinColumn(name="id")
-////    private Question question;
-
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name="id")
+    private Question question;
+
     private String alternative_text;
     private String critical_level;
 

@@ -2,25 +2,20 @@ package com.br.ages.orientacaobucalbackend.Entity;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "question")
 public class Question {
     @Id
-    @SequenceGenerator(
-            name="question_sequence",
-            sequenceName = "question_sequence",
-            allocationSize = 1
-    )
     @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "question_sequence"
+            strategy = GenerationType.IDENTITY
     )
-
-//    @OneToMany
-//    private List<Alternative> alternatives;
-
     private Long id;
+
+    @OneToMany(mappedBy = "question")
+    private Set<Alternative> alternatives;
+
     private String question_text;
 
     public Question() {

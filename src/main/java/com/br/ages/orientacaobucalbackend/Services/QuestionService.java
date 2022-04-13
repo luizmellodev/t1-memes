@@ -26,9 +26,6 @@ public class QuestionService {
         return questionRepository.findAll();
     }
 
-    public List<Question> getQuestionsWithAlternatives() {
-        return questionRepository.findAllQuestionsWithAlternatives();
-    }
 
     /**
      * Add a new question

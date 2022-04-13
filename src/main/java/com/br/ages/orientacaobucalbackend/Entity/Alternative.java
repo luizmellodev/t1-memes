@@ -11,8 +11,7 @@ public class Alternative {
     )
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name="question_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Question question;
 
     private String alternative_text;

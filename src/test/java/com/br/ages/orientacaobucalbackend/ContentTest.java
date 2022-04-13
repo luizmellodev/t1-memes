@@ -1,27 +1,29 @@
 package com.br.ages.orientacaobucalbackend;
 
-import com.br.ages.orientacaobucalbackend.Entity.Exemplo;
-import com.br.ages.orientacaobucalbackend.Services.ExemploService;
+import com.br.ages.orientacaobucalbackend.Entity.Content;
+import com.br.ages.orientacaobucalbackend.Services.ContentService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.Assert;
 
 import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ExemploServiceTest {
+public class ContentTest {
+
     @Autowired
-    private ExemploService exemploService;
+    private ContentService contentService;
 
     @Test
     public void whenApplicationStarts_thenHibernateCreatesInitialRecords() {
-        exemploService.deleteAll();
-        exemploService.save("João Teste");
-        List<Exemplo> books = exemploService.list();
-        Assert.isTrue(books.size() == 1);
+        Content content = new Content("text url", "text title", "", "panfleto url");
+        contentService.deleteAll();
+        contentService.save(content);
+        List<Content> contentList= contentService.list();
+
+        assert(contentList.size() == 1);
     }
 }

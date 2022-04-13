@@ -42,7 +42,7 @@ test:
 build:
   stage: build
   only:
-    - master
+    - main
   script:
     - docker build -t saude-velho-backend .
     - "docker tag saude-velho-backend:latest \
@@ -55,7 +55,7 @@ build:
 push:
   stage: push
   only:
-    - master
+    - main
   before_script:
     - apk add --update --no-cache curl python3 py3-pip build-base openssh-client
     - pip install awscli && apk --purge -v del py-pip
@@ -72,7 +72,7 @@ push:
 deploy:
   stage: deploy
   only:
-    - master
+    - main
   before_script:
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -

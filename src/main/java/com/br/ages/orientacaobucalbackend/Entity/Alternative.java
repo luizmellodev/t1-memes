@@ -12,7 +12,7 @@ public class Alternative {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="id")
+    @JoinColumn(name="question_id")
     private Question question;
 
     private String alternative_text;

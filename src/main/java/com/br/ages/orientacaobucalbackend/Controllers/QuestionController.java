@@ -23,6 +23,11 @@ public class QuestionController {
         return questionService.getQuestions();
     }
 
+//    @GetMapping
+//    public List<Question> getQuestionsWithAlternatives() {
+//        return questionService.getQuestionsWithAlternatives();
+//    }
+
     @PostMapping
     public void registerNewQuestion(@RequestBody Question question) {
         questionService.addNewQuestion(question);

@@ -14,7 +14,7 @@ public class Question {
     private Long id;
 
     @OneToMany(mappedBy = "question")
-    private Set<Alternative> alternatives;
+    private List<Alternative> alternatives;
 
     private String question_text;
 

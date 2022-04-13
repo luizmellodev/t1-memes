@@ -1,0 +1,96 @@
+image: docker:dind
+
+variables:
+  REPO: tools.ages.pucrs.br
+  GROUP: orientacao-bucal-no-envelhecimento
+  PROJECT: orientacao-bucal-no-envelhecimento-backend
+
+stages:
+  - test
+  - build
+  - push
+  - deploy
+
+########
+# TEST #
+########
+
+test:
+  stage: test
+  variables:
+    POSTGRES_DB: orientacao-bucal
+    POSTGRES_HOST: postgres-test
+    POSTGRES_PORT: 5432
+    POSTGRES_USER: $POSTGRES_USER
+    POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    SERVER_PORT: 3000
+  services:
+    # auxiliary database for testing
+    - name: postgres:10.5
+      alias: postgres-test
+  before_script:
+    # dependencies for testing
+    - apk add --no-cache maven
+  script:
+    # testing server
+    - mvn clean test
+
+#########
+# BUILD #
+#########
+
+build:
+  stage: build
+  only:
+    - master
+  script:
+    - docker build -t saude-velho-backend .
+    - "docker tag saude-velho-backend:latest \
+      029236691098.dkr.ecr.us-east-2.amazonaws.com/saude-velho-backend:latest"
+
+########
+# PUSH #
+########
+
+push:
+  stage: push
+  only:
+    - master
+  before_script:
+    - apk add --update --no-cache curl python3 py3-pip build-base openssh-client
+    - pip install awscli && apk --purge -v del py-pip
+    - "aws ecr get-login-password --region us-east-2 \
+      | docker login --username AWS --password-stdin \
+      029236691098.dkr.ecr.us-east-2.amazonaws.com"
+  script:
+    - docker push 029236691098.dkr.ecr.us-east-2.amazonaws.com/saude-velho-backend:latest
+
+##########
+# DEPLOY #
+##########
+
+deploy:
+  stage: deploy
+  only:
+    - master
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - docker context create --docker host=ssh://ec2-user@"$SWARM_HOST" swarm
+  script:
+    - docker --context swarm service rm saude-velho-backend 2>/dev/null || true
+    - "docker --context swarm service create \
+      --with-registry-auth \
+      --replicas=1 \
+      --name saude-velho-backend \
+      --network backend \
+      -e POSTGRES_DB=orientacao-bucal \
+      -e POSTGRES_USER=$POSTGRES_USER \
+      -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+      -e POSTGRES_HOST=postgres \
+      -e POSTGRES_PORT=5432 \
+      -e SERVER_PORT=3000 \
+      --publish published=3000,target=3000 \
+      029236691098.dkr.ecr.us-east-2.amazonaws.com/saude-velho-backend:latest"

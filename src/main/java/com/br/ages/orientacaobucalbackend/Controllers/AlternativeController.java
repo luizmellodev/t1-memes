@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/alternative")
+@CrossOrigin
 public class AlternativeController {
 
     private final AlternativeService alternativeService;

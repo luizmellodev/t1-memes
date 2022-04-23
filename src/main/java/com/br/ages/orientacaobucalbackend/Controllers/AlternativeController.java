@@ -24,8 +24,8 @@ public class AlternativeController {
     }
 
     @PostMapping
-    public void registerNewAlternative(@RequestBody Alternative alternative) {
-        alternativeService.addNewAlternative(alternative);
+    public void registerNewAlternative(@RequestBody Alternative alternative,@RequestBody Long question_id) {
+        alternativeService.addNewAlternative(alternative, question_id);
     }
 
     @DeleteMapping(path = "{alternativeId}")

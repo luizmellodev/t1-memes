@@ -1,6 +1,7 @@
 package com.br.ages.orientacaobucalbackend.Services;
 
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.AlternativeRepository;
+import com.br.ages.orientacaobucalbackend.DataAcess.Repository.QuestionRepository;
 import com.br.ages.orientacaobucalbackend.Entity.Alternative;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,10 +12,12 @@ import java.util.List;
 public class AlternativeService {
 
     private final AlternativeRepository alternativeRepository;
+    private final QuestionRepository questionRepository;
 
     @Autowired
-    public AlternativeService(AlternativeRepository alternativeRepository) {
+    public AlternativeService(AlternativeRepository alternativeRepository,QuestionRepository questionRepository) {
         this.alternativeRepository = alternativeRepository;
+        this.questionRepository = questionRepository;
     }
 
     /**
@@ -37,9 +40,9 @@ public class AlternativeService {
      * Add a new alternative
      * @param alternative The alternative to be added
      */
-    public void addNewAlternative(Alternative alternative) {
+    public void addNewAlternative(Alternative alternative, long question_id) {
         // TODO adicionar possíveis validações
-
+        alternative.setQuestion(questionRepository.getById(question_id));
         alternativeRepository.save(alternative);
     }
 

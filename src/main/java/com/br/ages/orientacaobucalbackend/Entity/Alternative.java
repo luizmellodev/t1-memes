@@ -1,5 +1,8 @@
 package com.br.ages.orientacaobucalbackend.Entity;
 
+import com.br.ages.orientacaobucalbackend.DataAcess.Repository.QuestionRepository;
+import com.br.ages.orientacaobucalbackend.Services.QuestionService;
+
 import javax.persistence.*;
 
 @Entity
@@ -14,9 +17,9 @@ public class Alternative {
     @ManyToOne
     @JoinColumn(name="question_id")
     private Question question;
-
     private String alternative_text;
     private String critical_level;
+
 
     public Alternative() {
     }
@@ -39,6 +42,8 @@ public class Alternative {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public void setQuestion(Question question) { this.question = question; }
 
     public String getAlternativeText() {
         return alternative_text;

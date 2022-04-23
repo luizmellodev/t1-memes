@@ -9,9 +9,6 @@ import java.util.List;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
-    @Query(
-            value = "SELECT q FROM Question q LEFT JOIN Alternative a",
-            nativeQuery = true
-    )
+    @Query(value = "SELECT * FROM Question q JOIN Alternative a ON q.id = a.question_id", nativeQuery = true)
     List<Question> findAllQuestionsWithAlternatives();
 }

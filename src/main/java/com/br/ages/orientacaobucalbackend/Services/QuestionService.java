@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class QuestionService {
@@ -24,6 +25,10 @@ public class QuestionService {
      */
     public List<Question> getQuestions() {
         return questionRepository.findAll();
+    }
+
+    public Question getQuestion(Long id){
+        return questionRepository.getById(id);
     }
 
     public List<Question> getQuestionsWithAlternatives() {

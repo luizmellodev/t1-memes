@@ -18,15 +18,14 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
-    @GetMapping
-    public List<Question> getQuestions() {
-        return questionService.getQuestions();
-    }
+    //public List<Question> getQuestions() {
+    //    return questionService.getQuestions();
+    //}
 
-//    @GetMapping
-//    public List<Question> getQuestionsWithAlternatives() {
-//        return questionService.getQuestionsWithAlternatives();
-//    }
+    @GetMapping
+    public List<Question> getQuestionsWithAlternatives() {
+        return questionService.getQuestionsWithAlternatives();
+    }
 
     @PostMapping
     public void registerNewQuestion(@RequestBody Question question) {

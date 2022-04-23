@@ -1,5 +1,8 @@
 package com.br.ages.orientacaobucalbackend.Entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +17,8 @@ public class Question {
     private Long id;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Setter
+    @Getter
     private List<Alternative> alternatives;
 
     private String question_text;
@@ -21,13 +26,6 @@ public class Question {
     public Question() {
     }
 
-    public void addAlternative(Alternative alternative) {
-        alternatives.add(alternative);
-    }
-
-    public void removeAlternative(Alternative alternative) {
-        alternatives.remove(alternative);
-    }
 
     public Question(Long id, String question_text) {
         this.id = id;
@@ -54,8 +52,4 @@ public class Question {
         this.question_text = question_text;
     }
 
-    @Override
-    public String toString() {
-        return "Question{" + "id=" + id + ", question_text=" + question_text + '\'' + '}';
-    }
 }

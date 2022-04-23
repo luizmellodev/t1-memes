@@ -1,6 +1,7 @@
 package com.br.ages.orientacaobucalbackend.Services;
 
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.QuestionRepository;
+import com.br.ages.orientacaobucalbackend.Entity.Alternative;
 import com.br.ages.orientacaobucalbackend.Entity.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,8 @@ public class QuestionService {
     }
 
     public List<Question> getQuestionsWithAlternatives() {
-        return questionRepository.findAllQuestionsWithAlternatives();
+        List<Question> q = questionRepository.findAll();
+        return q;
     }
 
 
@@ -32,10 +34,13 @@ public class QuestionService {
      * Add a new question
      * @param question The question to be added
      */
-    public void addNewQuestion(Question question) {
+    public Long addNewQuestion(Question question) {
         // TODO adicionar possíveis validações
-
-        questionRepository.save(question);
+        try{
+            questionRepository.save(question);
+            return question.getId();
+        } catch (Exception e) { e.printStackTrace(); }
+        return null;
     }
 
     /**

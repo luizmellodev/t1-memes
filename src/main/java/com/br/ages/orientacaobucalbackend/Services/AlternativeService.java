@@ -3,10 +3,12 @@ package com.br.ages.orientacaobucalbackend.Services;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.AlternativeRepository;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.QuestionRepository;
 import com.br.ages.orientacaobucalbackend.Entity.Alternative;
+import com.br.ages.orientacaobucalbackend.Entity.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AlternativeService {
@@ -42,8 +44,11 @@ public class AlternativeService {
      */
     public void addNewAlternative(Alternative alternative, long question_id) {
         // TODO adicionar possíveis validações
-        alternative.setQuestion(questionRepository.getById(question_id));
-        alternativeRepository.save(alternative);
+        Optional<Question> question = questionRepository.findById(question_id);
+        if(question.isPresent()) {
+            alternative.setQuestion(question.get());
+            alternativeRepository.save(alternative);
+        }
     }
 
     /**

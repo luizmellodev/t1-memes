@@ -38,10 +38,9 @@ public class Alternative {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Question getQuestion() {
+        return question;
     }
-
     public void setQuestion(Question question) { this.question = question; }
 
     public String getAlternativeText() {
@@ -60,12 +59,4 @@ public class Alternative {
         this.critical_level = critical_level;
     }
 
-    @Override
-    public String toString() {
-        return "Alternative{" +
-                "id=" + id +
-                ", alternative_text='" + alternative_text + '\'' +
-                ", critical_level='" + critical_level + '\'' +
-                '}';
-    }
 }

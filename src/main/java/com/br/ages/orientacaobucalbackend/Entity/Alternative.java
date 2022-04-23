@@ -1,7 +1,9 @@
 package com.br.ages.orientacaobucalbackend.Entity;
 
-import com.br.ages.orientacaobucalbackend.DataAcess.Repository.QuestionRepository;
-import com.br.ages.orientacaobucalbackend.Services.QuestionService;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -12,51 +14,18 @@ public class Alternative {
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
     )
+    @Getter
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @Getter
+    @Setter
     private Question question;
-    private String alternative_text;
-    private String critical_level;
-
-
-    public Alternative() {
-    }
-
-    public Alternative(Long id, String alternative_text, String critical_level) {
-        this.id = id;
-        this.alternative_text = alternative_text;
-        this.critical_level = critical_level;
-    }
-
-    public Alternative(String alternative_text, String critical_level) {
-        this.alternative_text = alternative_text;
-        this.critical_level = critical_level;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-    public void setQuestion(Question question) { this.question = question; }
-
-    public String getAlternativeText() {
-        return alternative_text;
-    }
-
-    public void setAlternativeText(String alternative_text) {
-        this.alternative_text = alternative_text;
-    }
-
-    public String getCriticalLevel() {
-        return critical_level;
-    }
-
-    public void setCriticalLevel(String critical_level) {
-        this.critical_level = critical_level;
-    }
-
+    @Getter
+    @Setter
+    private String alternativeText;
+    @Getter
+    @Setter
+    private String criticalLevel;
 }

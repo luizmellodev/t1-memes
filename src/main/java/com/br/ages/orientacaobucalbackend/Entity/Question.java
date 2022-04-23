@@ -16,7 +16,7 @@ public class Question {
     )
     private Long id;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "question")
     @Setter
     @Getter
     private List<Alternative> alternatives;

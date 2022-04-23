@@ -20,10 +20,6 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
-    //public List<Question> getQuestions() {
-    //    return questionService.getQuestions();
-    //}
-
     @GetMapping
     public List<Question> getQuestionsWithAlternatives() {
         return questionService.getQuestionsWithAlternatives();

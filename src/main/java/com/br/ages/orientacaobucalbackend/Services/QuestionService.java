@@ -19,14 +19,6 @@ public class QuestionService {
         this.questionRepository = questionRepository;
     }
 
-    /**
-     * Get a list of all of the questions
-     * @return
-     */
-    public List<Question> getQuestions() {
-        return questionRepository.findAll();
-    }
-
     public Question getQuestion(Long id){
         return questionRepository.getById(id);
     }
@@ -34,6 +26,7 @@ public class QuestionService {
     public List<Question> getQuestionsWithAlternatives() {
         return questionRepository.findAllQuestionsWithAlternatives();
     }
+
 
     /**
      * Add a new question

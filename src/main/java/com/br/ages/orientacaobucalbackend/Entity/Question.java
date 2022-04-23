@@ -13,12 +13,20 @@ public class Question {
     )
     private Long id;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Alternative> alternatives;
 
     private String question_text;
 
     public Question() {
+    }
+
+    public void addAlternative(Alternative alternative) {
+        alternatives.add(alternative);
+    }
+
+    public void removeAlternative(Alternative alternative) {
+        alternatives.remove(alternative);
     }
 
     public Question(Long id, String question_text) {

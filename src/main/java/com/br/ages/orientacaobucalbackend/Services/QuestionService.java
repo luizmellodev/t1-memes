@@ -29,12 +29,12 @@ public class QuestionService {
         return q;
     }
 
-    public ResponseEntity<Question> getQuestionById(Long id) {
+    public Question getQuestionById(Long id) {
         Optional<Question> question = questionRepository.findById(id);
         if(question.isPresent()) {
-            return ResponseEntity.ok().body(question.get());
+            return question.get();
         } else {
-            return ResponseEntity.notFound().build();
+            return null;
         }
     }
 

@@ -1,14 +1,12 @@
 package com.br.ages.orientacaobucalbackend.Services;
 
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.QuestionRepository;
-import com.br.ages.orientacaobucalbackend.Entity.Alternative;
 import com.br.ages.orientacaobucalbackend.Entity.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class QuestionService {
@@ -47,7 +45,7 @@ public class QuestionService {
      * Delete a question by id
      * @param questionId The id of the question to be deleted
      */
-    public void deleteStudent(Long questionId) {
+    public void deleteQuestion(Long questionId) {
         boolean exists = questionRepository.existsById(questionId);
 
         if(!exists) {

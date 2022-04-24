@@ -25,20 +25,22 @@ public class AlternativeController {
     }
 
     @PostMapping("/{questionId}")
-    public void registerNewAlternative(@RequestBody Alternative alternative, @PathVariable Long questionId) {
+    public void registerNewAlternative(
+        @PathVariable Long questionId,
+        @RequestBody Alternative alternative) {
         alternativeService.addNewAlternative(alternative, questionId);
     }
 
     @DeleteMapping(path = "{alternativeId}")
-    public void deleteAlternative(@PathVariable("alternativeId") Long alternativeId) {
+    public void deleteAlternative(
+        @PathVariable("alternativeId") Long alternativeId) {
         alternativeService.deleteAlternative(alternativeId);
     }
 
     @PutMapping(path = "{alternativeId}")
     public void updateAlternative(
             @PathVariable("alternativeId") Long alternativeId,
-            @RequestParam(required = false) String alternativeText,
-            @RequestParam(required = false) String criticalLevel) {
-        alternativeService.updateAlternative(alternativeId, alternativeText, criticalLevel);
+            @RequestBody Alternative alternative) {
+        alternativeService.updateAlternative(alternativeId, alternative.getAlternativeText(), alternative.getCriticalLevel());
     }
 }

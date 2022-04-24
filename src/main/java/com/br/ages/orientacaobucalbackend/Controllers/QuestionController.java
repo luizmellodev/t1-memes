@@ -1,10 +1,8 @@
 package com.br.ages.orientacaobucalbackend.Controllers;
 
-import com.br.ages.orientacaobucalbackend.Entity.Alternative;
 import com.br.ages.orientacaobucalbackend.Entity.Question;
 import com.br.ages.orientacaobucalbackend.Services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,7 +31,7 @@ public class QuestionController {
 
     @DeleteMapping(path = "{questionId}")
     public void deleteQuestion(@PathVariable("questionId") Long questionId) {
-        questionService.deleteStudent(questionId);
+        questionService.deleteQuestion(questionId);
     }
 
     @PutMapping(path = "{questionId}")

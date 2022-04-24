@@ -4,52 +4,33 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+// import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+// import com.fasterxml.jackson.annotation.JsonManagedReference;
+// import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "question")
+// @JsonIdentityInfo(
+//   generator = ObjectIdGenerators.PropertyGenerator.class, 
+//   property = "id")
 public class Question {
+    @Getter
     @Id
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
     )
     private Long id;
 
-    @OneToMany(mappedBy = "question")
-    @Setter
     @Getter
+    @Setter
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JsonManagedReference
     private List<Alternative> alternatives;
 
-    private String question_text;
-
-    public Question() {
-    }
-
-
-    public Question(Long id, String question_text) {
-        this.id = id;
-        this.question_text = question_text;
-    }
-
-    public Question(String question_text) {
-        this.question_text = question_text;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getQuestionText() {
-        return question_text;
-    }
-
-    public void setQuestionText(String question_text) {
-        this.question_text = question_text;
-    }
-
+    @Getter
+    @Setter
+    private String questionText;
 }

@@ -1,7 +1,6 @@
 package com.br.ages.orientacaobucalbackend.DataAcess.Repository;
 
 import com.br.ages.orientacaobucalbackend.Entity.Alternative;
-import com.br.ages.orientacaobucalbackend.Entity.Question;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

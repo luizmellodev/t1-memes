@@ -73,7 +73,7 @@ public class AlternativeService {
      */
     public void updateAlternative(Long alternativeId, String alternativeText, String criticalLevel) {
         Alternative alternative = alternativeRepository.findById(alternativeId).orElseThrow(() -> new IllegalStateException(
-                "question with id " + alternativeId + " does not exist"));
+                "alternative with id " + alternativeId + " does not exist"));
 
         // TODO adicionar possíveis validações
 
@@ -85,8 +85,4 @@ public class AlternativeService {
             alternative.setCriticalLevel(criticalLevel);
         }
     }
-
-
-
-
 }

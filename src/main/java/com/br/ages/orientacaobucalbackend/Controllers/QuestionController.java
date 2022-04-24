@@ -3,6 +3,7 @@ package com.br.ages.orientacaobucalbackend.Controllers;
 import com.br.ages.orientacaobucalbackend.Entity.Question;
 import com.br.ages.orientacaobucalbackend.Services.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,12 @@ public class QuestionController {
     @GetMapping
     public List<Question> getQuestionsWithAlternatives() {
         return questionService.getQuestionsWithAlternatives();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseEntity<Question>> getQuestionById(@PathVariable Long id) {
+        return ResponseEntity.ok()
+                .body(questionService.getQuestionById(id));
     }
 
     @PostMapping

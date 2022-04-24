@@ -3,10 +3,12 @@ package com.br.ages.orientacaobucalbackend.Services;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.QuestionRepository;
 import com.br.ages.orientacaobucalbackend.Entity.Question;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class QuestionService {
@@ -25,6 +27,15 @@ public class QuestionService {
     public List<Question> getQuestionsWithAlternatives() {
         List<Question> q = questionRepository.findAll();
         return q;
+    }
+
+    public ResponseEntity<Question> getQuestionById(Long id) {
+        Optional<Question> question = questionRepository.findById(id);
+        if(question.isPresent()) {
+            return ResponseEntity.ok().body(question.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 

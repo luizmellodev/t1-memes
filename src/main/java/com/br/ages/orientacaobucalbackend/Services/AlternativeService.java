@@ -4,6 +4,7 @@ import com.br.ages.orientacaobucalbackend.DataAcess.Repository.AlternativeReposi
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.QuestionRepository;
 import com.br.ages.orientacaobucalbackend.Entity.Alternative;
 import com.br.ages.orientacaobucalbackend.Entity.Question;
+import com.br.ages.orientacaobucalbackend.enums.AlternativeCriticalLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,17 +72,17 @@ public class AlternativeService {
      * @param alternativeText The text of the alternative
      * @param criticalLevel The critical level of the alternative
      */
-    public void updateAlternative(Long alternativeId, String alternativeText, String criticalLevel) {
+    public void updateAlternative(Long alternativeId, String alternativeText, AlternativeCriticalLevel criticalLevel) {
         Alternative alternative = alternativeRepository.findById(alternativeId).orElseThrow(() -> new IllegalStateException(
                 "alternative with id " + alternativeId + " does not exist"));
 
         // TODO adicionar possíveis validações
 
-        if (alternativeText != null && alternativeText.length() > 0) {
+        if (alternativeText != null) {
             alternative.setAlternativeText(alternativeText);
         }
 
-        if (criticalLevel != null && criticalLevel.length() > 0) {
+        if (criticalLevel != null) {
             alternative.setCriticalLevel(criticalLevel);
         }
     }

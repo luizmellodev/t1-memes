@@ -3,6 +3,7 @@ package com.br.ages.orientacaobucalbackend.Entity;
 // import com.fasterxml.jackson.annotation.JsonBackReference;
 // import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 // import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.br.ages.orientacaobucalbackend.enums.AlternativeCriticalLevel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
@@ -36,5 +37,5 @@ public class Alternative {
     
     @Getter
     @Setter
-    private String criticalLevel;
+    private AlternativeCriticalLevel criticalLevel;
 }

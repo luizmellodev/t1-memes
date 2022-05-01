@@ -17,11 +17,11 @@ import javax.persistence.*;
 //   generator = ObjectIdGenerators.PropertyGenerator.class, 
 //   property = "id")
 public class Alternative {
+    @Getter
     @Id
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
     )
-    @Getter
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -66,24 +66,16 @@ public class AlternativeService {
         alternativeRepository.deleteById(alternativeId);
     }
 
-    /**
-     * Update an alternative
-     * @param alternativeId The id of the alternative
-     * @param alternativeText The text of the alternative
-     * @param criticalLevel The critical level of the alternative
-     */
-    public void updateAlternative(Long alternativeId, String alternativeText, AlternativeCriticalLevel criticalLevel) {
-        Alternative alternative = alternativeRepository.findById(alternativeId).orElseThrow(() -> new IllegalStateException(
-                "alternative with id " + alternativeId + " does not exist"));
-
-        // TODO adicionar possíveis validações
-
-        if (alternativeText != null) {
-            alternative.setAlternativeText(alternativeText);
-        }
-
-        if (criticalLevel != null) {
-            alternative.setCriticalLevel(criticalLevel);
+    public boolean updateAlternative(Long id, Alternative newAlternative) {
+        Optional<Alternative> oldAlternative = alternativeRepository.findById(id);
+        if (oldAlternative.isPresent()) {
+            Alternative alternative = oldAlternative.get();
+            alternative.setAlternativeText(newAlternative.getAlternativeText());
+            alternative.setCriticalLevel(newAlternative.getCriticalLevel());
+            alternativeRepository.save(alternative);
+            return true;
+        } else {
+            throw new NullPointerException("this alternative doesn't exist.");
         }
     }
 }

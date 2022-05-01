@@ -47,10 +47,12 @@ public class QuestionController {
         questionService.deleteQuestion(questionId);
     }
 
-    @PutMapping(path = "{questionId}")
-    public void updateQuestion(
-            @PathVariable("questionId") Long questionId,
-            @RequestBody Question question) {
-        questionService.updateQuestion(questionId, question.getQuestionText());
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateQuestion(@PathVariable Long id, @RequestBody Question newQuestion) {
+        if (questionService.updateQuestion(id, newQuestion)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

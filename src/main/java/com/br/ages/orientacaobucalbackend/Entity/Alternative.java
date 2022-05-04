@@ -28,6 +28,7 @@ public class Alternative {
     @Getter
     @Setter
     // @JsonBackReference
+    @JoinColumn(name = "question_id")
     @JsonIgnore
     private Question question;
 

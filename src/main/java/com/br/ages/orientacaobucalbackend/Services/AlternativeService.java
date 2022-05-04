@@ -18,13 +18,14 @@ public class AlternativeService {
     private final QuestionRepository questionRepository;
 
     @Autowired
-    public AlternativeService(AlternativeRepository alternativeRepository,QuestionRepository questionRepository) {
+    public AlternativeService(AlternativeRepository alternativeRepository, QuestionRepository questionRepository) {
         this.alternativeRepository = alternativeRepository;
         this.questionRepository = questionRepository;
     }
 
     /**
      * Get a list of all of the alternatives
+     *
      * @return
      */
     public List<Alternative> getAlternatives() {
@@ -33,6 +34,7 @@ public class AlternativeService {
 
     /**
      * Get a list of alternatives linked to a question
+     *
      * @param questionId The id of the question
      */
     public void getAlternativesByQuestionId(Long questionId) {
@@ -41,12 +43,13 @@ public class AlternativeService {
 
     /**
      * Add a new alternative
+     *
      * @param alternative The alternative to be added
      */
     public void addNewAlternative(Alternative alternative, long question_id) {
         // TODO adicionar possíveis validações
         Optional<Question> question = questionRepository.findById(question_id);
-        if(question.isPresent()) {
+        if (question.isPresent()) {
             alternative.setQuestion(question.get());
             alternativeRepository.save(alternative);
         }
@@ -54,28 +57,27 @@ public class AlternativeService {
 
     /**
      * Delete an alternative by id
+     *
      * @param alternativeId
      */
     public void deleteAlternative(Long alternativeId) {
         boolean exists = alternativeRepository.existsById(alternativeId);
 
-        if(!exists) {
+        if (!exists) {
             throw new IllegalStateException("alternative with id " + alternativeId + " does not exist");
         }
 
         alternativeRepository.deleteById(alternativeId);
     }
 
-    public boolean updateAlternative(Long id, Alternative newAlternative) {
-        Optional<Alternative> oldAlternative = alternativeRepository.findById(id);
-        if (oldAlternative.isPresent()) {
-            Alternative alternative = oldAlternative.get();
-            alternative.setAlternativeText(newAlternative.getAlternativeText());
-            alternative.setCriticalLevel(newAlternative.getCriticalLevel());
-            alternativeRepository.save(alternative);
-            return true;
-        } else {
-            throw new NullPointerException("this alternative doesn't exist.");
+    public void updateAlternative(Long alternativeId, String alternativeText, AlternativeCriticalLevel criticalLevel) {
+        Alternative alternative = alternativeRepository.findById(alternativeId).orElseThrow(() -> new IllegalStateException("alternative with id " + alternativeId + " does not exist"));
+        if(criticalLevel != null) {
+            alternative.setCriticalLevel(criticalLevel);
         }
+        if (alternativeText != null) {
+            alternative.setAlternativeText(alternativeText);
+        }
+        alternativeRepository.save(alternative);
     }
 }

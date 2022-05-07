@@ -1,15 +1,17 @@
 package com.br.ages.orientacaobucalbackend.Services;
 
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.PdfRepository;
-import com.br.ages.orientacaobucalbackend.DataAcess.Repository.QuestionRepository;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Map;
 
 @Service
 public class PdfService {
@@ -20,8 +22,11 @@ public class PdfService {
         this.pdfRepository = pdfRepository;
     }
 
-    public Document geraPdf() throws DocumentException, IOException
+    public String geraPdf(Map<String, ArrayList> map) throws DocumentException, IOException
     {
+        String awsLink = "s";
+        String paragraphString = "";
+        int id = 1;
         Document document = new Document(PageSize.A4);
         File file = File.createTempFile("exame", ".pdf");
         FileOutputStream pdf = new FileOutputStream(file);
@@ -35,10 +40,19 @@ public class PdfService {
 
         document.open();
         Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-        Chunk chunk = new Chunk("Hello World", font);
 
-        document.add(chunk);
+        for (var entry : map.entrySet()) {
+            ArrayList alternativeData = entry.getValue();
+            String question = entry.getKey();
+            String text = alternativeData.get(0).toString();
+            String criticalLevel = alternativeData.get(1).toString();
+
+            paragraphString = id + ". " + question + " " + text + " [" + criticalLevel + "]";
+
+            document.add(new Paragraph(paragraphString));
+            id++;
+        }
         document.close();
-        return document;
+        return awsLink;
     }
 }

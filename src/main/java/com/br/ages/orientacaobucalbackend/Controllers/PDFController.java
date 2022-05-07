@@ -1,27 +1,15 @@
 package com.br.ages.orientacaobucalbackend.Controllers;
 
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Map;
 
-import com.br.ages.orientacaobucalbackend.Entity.Question;
 import com.br.ages.orientacaobucalbackend.Services.PdfService;
-import com.br.ages.orientacaobucalbackend.Services.QuestionService;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfWriter;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/pdf")
@@ -35,8 +23,8 @@ public class PDFController {
             this.pdfService = pdfService;
       }
 
-      @GetMapping
-      public Document geraPdf() throws DocumentException, IOException {
-          return pdfService.geraPdf();
+      @PostMapping
+      public String geraPdf(@RequestBody Map<String, ArrayList> map) throws DocumentException, IOException {
+          return pdfService.geraPdf(map);
       }
 }

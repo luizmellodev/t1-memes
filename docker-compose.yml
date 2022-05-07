@@ -32,6 +32,19 @@ services:
       networks: 
         - backend
 
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    privileged: true
+    restart: always
+    ports: 
+      - '3001:80'
+    networks:
+      - backend
+    volumes:
+      - ./target/cucumber:/www/data
+      - ./nginx.conf:/etc/nginx/nginx.conf
+
 networks:
   backend:
     driver: bridge

@@ -1,6 +1,7 @@
 package com.br.ages.orientacaobucalbackend.Services;
 
 import com.br.ages.orientacaobucalbackend.Controllers.AlternativeController;
+import com.br.ages.orientacaobucalbackend.DataAcess.Repository.AlternativeRepository;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.QuestionRepository;
 import com.br.ages.orientacaobucalbackend.Entity.Alternative;
 import com.br.ages.orientacaobucalbackend.Entity.Question;
@@ -23,6 +24,9 @@ public class QuestionService {
     @Autowired
     AlternativeController alternativeController;
 
+    @Autowired
+    AlternativeRepository alternativeRepository;
+
     public Question getQuestion(Long id) {
         return questionRepository.getById(id);
     }
@@ -41,9 +45,11 @@ public class QuestionService {
         }
     }
     public Long addNewQuestion(Question question) {
-        // TODO adicionar possíveis validações
         try{
             questionRepository.save(question);
+            for(Alternative alternative : question.getAlternatives()){
+                alternativeController.registerNewAlternative(question.getId(), alternative);
+            }
             return question.getId();
         } catch (Exception e) { e.printStackTrace(); }
         return null;
@@ -68,8 +74,14 @@ public class QuestionService {
         if (oldQuestion.isPresent()) {
             Question question = oldQuestion.get();
             question.setQuestionText(newQuestion.getQuestionText());
-            for(Alternative alternative : newQuestion.getAlternatives()) {
-                alternativeController.updateAlternative(alternative.getId(), alternative); // gambiarra, refatorar
+            for (Alternative alternative : newQuestion.getAlternatives()) {
+                if(alternative.getId() != null) {
+                    if(alternativeRepository.findById(alternative.getId()).isPresent()) {
+                        alternativeController.updateAlternative(alternative.getId(), alternative);
+                    }
+                } else {
+                    alternativeController.registerNewAlternative(newQuestion.getId(), alternative);
+                }
             }
             return true;
         } else {

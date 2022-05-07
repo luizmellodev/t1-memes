@@ -36,7 +36,7 @@ public class PDFController {
       }
 
       @GetMapping
-      public void geraPdf() throws DocumentException, IOException {
-           pdfService.geraPdf();
+      public Document geraPdf() throws DocumentException, IOException {
+          return pdfService.geraPdf();
       }
 }

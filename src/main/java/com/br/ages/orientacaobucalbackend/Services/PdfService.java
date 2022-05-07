@@ -20,7 +20,7 @@ public class PdfService {
         this.pdfRepository = pdfRepository;
     }
 
-    public void geraPdf() throws DocumentException, IOException
+    public Document geraPdf() throws DocumentException, IOException
     {
         Document document = new Document(PageSize.A4);
         File file = File.createTempFile("exame", ".pdf");
@@ -39,5 +39,6 @@ public class PdfService {
 
         document.add(chunk);
         document.close();
+        return document;
     }
 }

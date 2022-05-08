@@ -2,28 +2,25 @@ package com.br.ages.orientacaobucalbackend.Services;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Map;
 
 @Service
 public class PdfService {
 
-    public String geraPdf(Map<String, ArrayList> map) throws DocumentException, IOException
+    public ByteArrayInputStream geraPdf(Map<String, ArrayList> map) throws DocumentException, IOException
     {
-        String awsLink = "s";
         String paragraphString = "";
         int id = 1;
         Document document = new Document(PageSize.A4);
-        File file = File.createTempFile("exame", ".pdf");
-        FileOutputStream pdf = new FileOutputStream(file);
-        PdfWriter writer;
+        ByteArrayOutputStream pdf = new ByteArrayOutputStream();
 
         try {
-            writer = PdfWriter.getInstance(document, pdf);
+            PdfWriter.getInstance(document, pdf);
         } catch (DocumentException e) {
             throw new RuntimeException("Object creation error.", e);
         }
@@ -43,6 +40,7 @@ public class PdfService {
             id++;
         }
         document.close();
-        return awsLink;
+
+        return new ByteArrayInputStream(pdf.toByteArray());
     }
 }

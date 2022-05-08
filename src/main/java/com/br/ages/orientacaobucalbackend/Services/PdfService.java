@@ -1,26 +1,16 @@
 package com.br.ages.orientacaobucalbackend.Services;
 
-import com.br.ages.orientacaobucalbackend.DataAcess.Repository.PdfRepository;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
 @Service
 public class PdfService {
-    private final PdfRepository pdfRepository;
-
-    @Autowired
-    public PdfService(PdfRepository pdfRepository) {
-        this.pdfRepository = pdfRepository;
-    }
 
     public String geraPdf(Map<String, ArrayList> map) throws DocumentException, IOException
     {

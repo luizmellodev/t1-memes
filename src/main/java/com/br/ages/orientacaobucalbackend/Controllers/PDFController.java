@@ -32,7 +32,9 @@ public class PDFController {
       public ResponseEntity<InputStreamResource> geraPdf(@RequestBody Map<String, ArrayList> map) throws DocumentException, IOException {
             HttpHeaders headers = new HttpHeaders();
             ByteArrayInputStream byteArrayInputStream = pdfService.geraPdf(map);
+            String level = pdfService.getCriticalColour(map);
             headers.add("content-disposition","inline;filename=resultadoAvaliacao.pdf");
+            headers.add("criticalLevel", level);
             return ResponseEntity
                     .ok()
                     .headers(headers)

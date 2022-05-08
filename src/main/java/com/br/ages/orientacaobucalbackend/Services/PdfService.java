@@ -33,7 +33,6 @@ public class PdfService {
             String question = entry.getKey();
             String text = alternativeData.get(0).toString();
             String criticalLevel = alternativeData.get(1).toString();
-
             paragraphString = id + ". " + question + " " + text + " [" + criticalLevel + "]";
 
             document.add(new Paragraph(paragraphString));
@@ -42,5 +41,18 @@ public class PdfService {
         document.close();
 
         return new ByteArrayInputStream(pdf.toByteArray());
+    }
+
+    public String getCriticalColour(Map<String, ArrayList> map) throws DocumentException, IOException
+    {
+        String level = "Verde";
+        for (var entry : map.entrySet()) {
+            ArrayList alternativeData = entry.getValue();
+            String criticalLevel = alternativeData.get(1).toString();
+
+            if(criticalLevel.equals("Vermelho") || level.equals("Vermelho")) level = "Vermelho";
+            else if(criticalLevel.equals("Amarelo")) level = "Amarelo";
+        }
+        return level;
     }
 }

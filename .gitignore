@@ -35,9 +35,13 @@ build/
 .vscode/
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ### Postgres ###
 postgres-data/
 =======
 # target
 target/
->>>>>>> aa01eeb1a8d3bb5200a7e594ae5156522263dea5
+
+### Postgres ###
+postgres-data/
+

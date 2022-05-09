@@ -1,29 +1,31 @@
-package com.br.ages.orientacaobucalbackend;
+// TODO: Change to cucumber format
 
-import com.br.ages.orientacaobucalbackend.Entity.Content;
-import com.br.ages.orientacaobucalbackend.Services.ContentService;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+// package com.br.ages.orientacaobucalbackend;
 
-import java.util.List;
+// import com.br.ages.orientacaobucalbackend.Entity.Content;
+// import com.br.ages.orientacaobucalbackend.Services.ContentService;
+// import org.junit.jupiter.api.Test;
+// import org.junit.runner.RunWith;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class ContentTest {
+// import java.util.List;
 
-    @Autowired
-    private ContentService contentService;
+// @RunWith(SpringRunner.class)
+// @SpringBootTest
+// public class ContentTest {
 
-    @Test
-    public void whenApplicationStarts_thenHibernateCreatesInitialRecords() {
-        Content content = new Content("text url", "text title", "", "panfleto url");
-        contentService.deleteAll();
-        contentService.save(content);
-        List<Content> contentList= contentService.list();
+// @Autowired
+// private ContentService contentService;
 
-        assert(contentList.size() == 1);
-    }
-}
+// @Test
+// public void whenApplicationStarts_thenHibernateCreatesInitialRecords() {
+// Content content = new Content("text url", "text title", "", "panfleto url");
+// contentService.deleteAll();
+// contentService.save(content);
+// List<Content> contentList= contentService.list();
+
+// assert(contentList.size() == 1);
+// }
+// }

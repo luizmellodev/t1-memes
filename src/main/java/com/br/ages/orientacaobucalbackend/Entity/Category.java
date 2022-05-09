@@ -5,16 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
-import lombok.extern.java.Log;
-import org.hibernate.mapping.Array;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "content")
-public class Content {
+@Table(name = "category")
+public class Category {
+
     @Id
     @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,28 +22,27 @@ public class Content {
     @Getter
     @Setter
     @NonNull
-    private String textUrl;
+    private String name;
 
     @Getter
     @Setter
     @NonNull
-    private String title;
+    private String color;
 
     @Getter
     @Setter
-    private String videoUrl;
+    @NonNull
+    private String imageUrl;
 
     @Getter
     @Setter
-    private String panfletoUrl;
+    @ManyToMany
+    @JoinTable(
+            name = "category_content",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "content_id")
+    )
+    @JsonIgnore
+    private List<Content> contents;
 
-    @Getter
-    @Setter
-    @ManyToMany(mappedBy = "contents")
-    private List<Category> categories;
-
-    @Getter
-    @Setter
-    @Transient
-    private List<Long> categories_ids;
 }

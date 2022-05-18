@@ -28,6 +28,7 @@ public class PDFController {
             this.pdfService = pdfService;
       }
 
+
       @PostMapping
       public ResponseEntity<InputStreamResource> geraPdf(@RequestBody Map<String, ArrayList> map) throws DocumentException, IOException {
             HttpHeaders headers = new HttpHeaders();

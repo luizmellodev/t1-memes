@@ -40,6 +40,7 @@ public class Content {
 
     @Getter
     @Setter
+    @Column(unique=true)
     @ManyToMany(mappedBy = "contents")
     private List<Category> categories;
 

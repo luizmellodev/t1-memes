@@ -39,7 +39,9 @@ public class ContentService {
         }
         return content;
     }
-
+    public void deleteCategory(Long content_id){
+        contentRepository.deleteCategoryContent(content_id);
+    }
     public void deleteAll() {
         contentRepository.deleteAll();
     }
@@ -70,6 +72,7 @@ public class ContentService {
 
     public boolean update(Long id, Content newContent) {
         Optional<Content> oldContent = this.findById(id);
+        deleteCategory(id);
         if (oldContent.isPresent()) {
             Content content = oldContent.get();
             content.setTitle(newContent.getTitle());

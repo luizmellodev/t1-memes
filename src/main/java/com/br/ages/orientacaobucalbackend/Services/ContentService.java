@@ -43,11 +43,13 @@ public class ContentService {
         contentRepository.deleteCategoryContent(content_id);
     }
     public void deleteAll() {
+        contentRepository.deleteAllCategoryContent();
         contentRepository.deleteAll();
     }
 
     public boolean deleteById(Long id) {
         Optional<Content> content = this.findById(id);
+        deleteCategory(id);
         if (content.isPresent()) {
             contentRepository.delete(content.get());
             return true;

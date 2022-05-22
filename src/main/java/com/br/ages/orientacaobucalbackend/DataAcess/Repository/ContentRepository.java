@@ -16,4 +16,10 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
     @Modifying
     @Query(value = "DELETE from category_content cc where cc.content_id =:content_id",  nativeQuery = true)
     void deleteCategoryContent(@Param("content_id") Long content_id);
+
+
+    @Transactional
+    @Modifying
+    @Query(value = "TRUNCATE TABLE category_content", nativeQuery = true)
+    void deleteAllCategoryContent();
 }

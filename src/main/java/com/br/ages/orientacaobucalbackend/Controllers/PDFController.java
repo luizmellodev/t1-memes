@@ -42,4 +42,9 @@ public class PDFController {
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(new InputStreamResource(byteArrayInputStream));
       }
+
+      @GetMapping
+      public String convertCsv(@RequestBody JSONObject json)throws DocumentException, IOException{
+            return PdfService.convertJsonToCsv(json);
+      }
 }

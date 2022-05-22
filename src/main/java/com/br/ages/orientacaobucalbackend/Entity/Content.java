@@ -9,6 +9,7 @@ import lombok.extern.java.Log;
 import org.hibernate.mapping.Array;
 
 import javax.persistence.*;
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 
@@ -37,6 +38,11 @@ public class Content {
     @Getter
     @Setter
     private String panfletoUrl;
+
+    @Getter
+    @Setter
+    @Transient
+    private File panfleto;
 
     @Getter
     @Setter

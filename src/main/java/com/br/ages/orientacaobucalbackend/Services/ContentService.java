@@ -1,5 +1,9 @@
 package com.br.ages.orientacaobucalbackend.Services;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.br.ages.orientacaobucalbackend.Config.AmazonClient;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.CategoryRepository;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.ContentRepository;
 import com.br.ages.orientacaobucalbackend.Entity.Category;
@@ -7,6 +11,7 @@ import com.br.ages.orientacaobucalbackend.Entity.Content;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

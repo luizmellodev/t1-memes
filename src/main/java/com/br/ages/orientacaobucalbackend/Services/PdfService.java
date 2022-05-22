@@ -2,6 +2,7 @@ package com.br.ages.orientacaobucalbackend.Services;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +57,8 @@ public class PdfService {
         return level;
     }
 
-    
+    public void convertJsonToCsv(JSONObject json){
+
+
+    }
 }

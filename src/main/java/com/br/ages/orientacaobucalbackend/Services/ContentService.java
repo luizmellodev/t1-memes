@@ -1,10 +1,5 @@
 package com.br.ages.orientacaobucalbackend.Services;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.br.ages.orientacaobucalbackend.Config.AmazonClient;
-import com.br.ages.orientacaobucalbackend.DataAcess.Repository.CategoryRepository;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.ContentRepository;
 import com.br.ages.orientacaobucalbackend.Entity.Category;
 import com.br.ages.orientacaobucalbackend.Entity.Content;

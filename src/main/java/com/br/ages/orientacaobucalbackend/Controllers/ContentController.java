@@ -1,8 +1,5 @@
 package com.br.ages.orientacaobucalbackend.Controllers;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.br.ages.orientacaobucalbackend.Entity.Content;
 import com.br.ages.orientacaobucalbackend.Services.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -79,12 +74,4 @@ public class ContentController {
         }
     }
 
-    //private String uploadFileTos3bucket(File file) {
-    //    try {
-    //        s3client.putObject(new PutObjectRequest("test-lucas-ages3", file.getName(), file));
-    //    }catch(AmazonServiceException e) {
-    //        return "uploadFileTos3bucket().Uploading failed :" + e.getMessage();
-    //    }
-    //    return s3client.getUrl("test-lucas-ages3", file.getName()).toString();
-    //}
 }

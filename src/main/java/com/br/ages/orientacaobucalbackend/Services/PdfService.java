@@ -66,8 +66,8 @@ public class PdfService {
     public static String convertJsonToCsv(JSONObject json) throws IOException {
 
         Document document = new Document(PageSize.A4);
-
-        JsonNode jsonTree = new ObjectMapper().readTree(new File("src/main/JsonToCsvTestFolder/test.json"));
+        var jsonArray = json.getJSONObject("");
+        JsonNode jsonTree = new ObjectMapper().valueToTree(jsonArray);
 
         Builder csvSchemaBuilder = CsvSchema.builder();
         JsonNode firstObject = jsonTree.elements().next();

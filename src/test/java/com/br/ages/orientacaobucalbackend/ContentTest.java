@@ -16,16 +16,16 @@
 // @SpringBootTest
 // public class ContentTest {
 
-//     @Autowired
-//     private ContentService contentService;
+// @Autowired
+// private ContentService contentService;
 
-//     @Test
-//     public void whenApplicationStarts_thenHibernateCreatesInitialRecords() {
-//         Content content = new Content("text url", "text title", "", "panfleto url");
-//         contentService.deleteAll();
-//         contentService.save(content);
-//         List<Content> contentList= contentService.list();
+// @Test
+// public void whenApplicationStarts_thenHibernateCreatesInitialRecords() {
+// Content content = new Content("text url", "text title", "", "panfleto url");
+// contentService.deleteAll();
+// contentService.save(content);
+// List<Content> contentList= contentService.list();
 
-//         assert(contentList.size() == 1);
-//     }
+// assert(contentList.size() == 1);
+// }
 // }

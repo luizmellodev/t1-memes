@@ -37,10 +37,9 @@ public class AlternativeController {
         alternativeService.deleteAlternative(alternativeId);
     }
 
-    @PutMapping(path = "{alternativeId}")
-    public void updateAlternative(
-            @PathVariable("alternativeId") Long alternativeId,
-            @RequestBody Alternative alternative) {
-        alternativeService.updateAlternative(alternativeId, alternative.getAlternativeText(), alternative.getCriticalLevel());
+    @PutMapping("/{id}")
+    public void updateAlternative(@PathVariable Long id, @RequestBody Alternative alternative) {
+        alternativeService.updateAlternative(id, alternative.getAlternativeText(), alternative.getCriticalLevel());
     }
+
 }

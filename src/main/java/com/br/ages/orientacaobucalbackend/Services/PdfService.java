@@ -18,9 +18,8 @@ import java.util.Map;
 @Service
 public class PdfService {
 
-    /** PDF */
-
-    public ByteArrayInputStream geraPdf(Map<String, ArrayList> map) throws DocumentException, IOException {
+    public ByteArrayInputStream geraPdf(Map<String, ArrayList> map) throws DocumentException, IOException
+    {
         String paragraphString = "";
         int id = 1;
         Document document = new Document(PageSize.A4);

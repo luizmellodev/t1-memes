@@ -28,9 +28,8 @@ public class PDFController {
             this.pdfService = pdfService;
       }
 
-
       @PostMapping
-      public ResponseEntity<InputStreamResource> geraPdf(@RequestBody Map<String, ArrayList> map) throws DocumentException, IOException {
+      public ResponseEntity<InputStreamResource> gerarPdf(@RequestBody Map<String, ArrayList> map) throws DocumentException, IOException {
             HttpHeaders headers = new HttpHeaders();
             ByteArrayInputStream byteArrayInputStream = pdfService.geraPdf(map);
             String level = pdfService.getCriticalColour(map);

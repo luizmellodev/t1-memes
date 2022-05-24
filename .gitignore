@@ -36,6 +36,11 @@ build/
 
 ### Postgres ###
 postgres-data/
+test/
 
 # target
 target/
+
+### Postgres ###
+postgres-data/
+

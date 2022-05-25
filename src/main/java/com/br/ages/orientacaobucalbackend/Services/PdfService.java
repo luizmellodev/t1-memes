@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -66,8 +67,7 @@ public class PdfService {
     public static String convertJsonToCsv(JSONObject json) throws IOException {
 
         Document document = new Document(PageSize.A4);
-        var jsonArray = json.getJSONObject("");
-        JsonNode jsonTree = new ObjectMapper().valueToTree(jsonArray);
+        JsonNode jsonTree = new ObjectMapper().readTree(json.toString().getBytes(StandardCharsets.UTF_8));
 
         Builder csvSchemaBuilder = CsvSchema.builder();
         JsonNode firstObject = jsonTree.elements().next();

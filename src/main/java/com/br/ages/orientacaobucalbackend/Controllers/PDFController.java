@@ -17,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/pdf")
+@RequestMapping("api/autoexam")
 @CrossOrigin
 public class PDFController {
 
@@ -28,7 +28,7 @@ public class PDFController {
             this.pdfService = pdfService;
       }
 
-      @PostMapping
+      @PostMapping("/pdf")
       public ResponseEntity<InputStreamResource> gerarPdf(@RequestBody Map<String, ArrayList> map) throws DocumentException, IOException {
             HttpHeaders headers = new HttpHeaders();
             ByteArrayInputStream byteArrayInputStream = pdfService.geraPdf(map);
@@ -42,7 +42,7 @@ public class PDFController {
                     .body(new InputStreamResource(byteArrayInputStream));
       }
 
-      @GetMapping
+      @PostMapping ("/csv")
       public String convertCsv(@RequestBody JSONObject json)throws DocumentException, IOException{
             return PdfService.convertJsonToCsv(json);
       }

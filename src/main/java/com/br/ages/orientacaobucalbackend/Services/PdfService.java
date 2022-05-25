@@ -77,7 +77,7 @@ public class PdfService {
                 listWriter.write(entry.getKey(), entry.getValue().get(0), entry.getValue().get(1));
             }
         }
-        System.out.println(output);
+        S3Service s3Service = new S3Service("");
         return output.toString();
     }
 }

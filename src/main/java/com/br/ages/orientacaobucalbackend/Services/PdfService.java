@@ -22,6 +22,8 @@ import java.util.Map;
 
 @Service
 public class PdfService {
+    private String uri = "saude-velho";
+    private String prefix = "autoexam-results";
 
     public ByteArrayInputStream geraPdf(Map<String, ArrayList> map) throws DocumentException, IOException {
         String paragraphString = "";
@@ -67,7 +69,7 @@ public class PdfService {
         return level;
     }
 
-    public static String convertJsonToCsv(Map<String, ArrayList> map) throws IOException {
+    public String convertJsonToCsv(Map<String, ArrayList> map) throws IOException {
 
         StringWriter output = new StringWriter();
         try (ICsvListWriter listWriter = new CsvListWriter(output,
@@ -77,7 +79,9 @@ public class PdfService {
                 listWriter.write(entry.getKey(), entry.getValue().get(0), entry.getValue().get(1));
             }
         }
-        S3Service s3Service = new S3Service("");
+        S3Service s3Service = new S3Service(uri);
+        byte[] bytes = output.toString().getBytes("UTF-8");
+        s3Service.upload("auto-exam.csv", prefix, bytes );
         return output.toString();
     }
 }

@@ -10,17 +10,20 @@ import com.itextpdf.text.pdf.PdfWriter;
 import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.supercsv.io.CsvListWriter;
+import org.supercsv.io.ICsvListWriter;
+import org.supercsv.prefs.CsvPreference;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class PdfService {
 
-    public ByteArrayInputStream geraPdf(Map<String, ArrayList> map) throws DocumentException, IOException
-    {
+    public ByteArrayInputStream geraPdf(Map<String, ArrayList> map) throws DocumentException, IOException {
         String paragraphString = "";
         int id = 1;
         Document document = new Document(PageSize.A4);
@@ -64,24 +67,17 @@ public class PdfService {
         return level;
     }
 
-    public static String convertJsonToCsv(JSONObject json) throws IOException {
+    public static String convertJsonToCsv(Map<String, ArrayList> map) throws IOException {
 
-        Document document = new Document(PageSize.A4);
-        JsonNode jsonTree = new ObjectMapper().readTree(json.toString().getBytes(StandardCharsets.UTF_8));
-
-        Builder csvSchemaBuilder = CsvSchema.builder();
-        JsonNode firstObject = jsonTree.elements().next();
-        firstObject.fieldNames().forEachRemaining(fieldName -> {
-            csvSchemaBuilder.addColumn(fieldName);
-        });
-        CsvSchema csvSchema = csvSchemaBuilder.build().withHeader();
-
-        CsvMapper csvMapper = new CsvMapper();
-        csvMapper.writerFor(JsonNode.class)
-                .with(csvSchema)
-                .writeValue(new File("src/main/JsonToCsvTestFolder/test.csv"), jsonTree);
-
-
-                return "a";
+        StringWriter output = new StringWriter();
+        try (ICsvListWriter listWriter = new CsvListWriter(output,
+                CsvPreference.STANDARD_PREFERENCE)){
+            listWriter.write("Pergunta", "Resposta", "Criticidade");
+            for (Map.Entry<String, ArrayList> entry : map.entrySet()){
+                listWriter.write(entry.getKey(), entry.getValue().get(0), entry.getValue().get(1));
+            }
+        }
+        System.out.println(output);
+        return output.toString();
     }
 }

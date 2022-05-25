@@ -43,7 +43,7 @@ public class PDFController {
       }
 
       @PostMapping ("/csv")
-      public String convertCsv(@RequestBody JSONObject json)throws DocumentException, IOException{
-            return PdfService.convertJsonToCsv(json);
+      public String convertCsv(@RequestBody Map<String, ArrayList> map)throws DocumentException, IOException{
+            return PdfService.convertJsonToCsv(map);
       }
 }

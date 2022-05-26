@@ -40,10 +40,10 @@ public class AutoExamController {
 
       @PostMapping ("/csv")
       public ResponseEntity<String> createCSV(@RequestBody Map<String, ArrayList> map)throws DocumentException, IOException {
-            String objectName = autoexamService.createCSV(map);
+            String objectNameJson = autoexamService.createCSV(map);
             return ResponseEntity
                   .ok()
                   .contentType(MediaType.APPLICATION_JSON)
-                  .body(objectName);
+                  .body(objectNameJson);
       }
 }

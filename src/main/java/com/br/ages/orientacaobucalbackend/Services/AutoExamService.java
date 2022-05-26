@@ -81,6 +81,6 @@ public class AutoExamService {
         byte[] csvBytes = output.toString().getBytes("UTF-8");
         String objectName = String.format(STRFMT_OBJECT_NAME, System.currentTimeMillis());
         s3Service.upload(objectName, S3_PREFIX, csvBytes);
-        return objectName;
+        return String.format("{\"%s\":\"%s\"}", KEY_OBJECT_NAME, objectName);
     }
 }

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 @Service
-public class PdfService {
+public class AutoExamService {
 
     private final String S3_URI = "saude-velho";
     private final String S3_PREFIX = "autoexam-results";
@@ -34,11 +34,11 @@ public class PdfService {
 
     private S3Service s3Service;
 
-    public PdfService() {
+    public AutoExamService() {
         this.s3Service = new S3Service(S3_URI);
     }
 
-    public ByteArrayInputStream geraPdf(Map<String, String> map) throws DocumentException, IOException {
+    public ByteArrayInputStream createPDF(Map<String, String> map) throws DocumentException, IOException {
         String objectName = map.get(KEY_OBJECT_NAME);
         byte[] csvBytes = s3Service.download(objectName, S3_PREFIX);
         String csv = new String(csvBytes);
@@ -64,7 +64,7 @@ public class PdfService {
         return new ByteArrayInputStream(pdf.toByteArray());
     }
 
-    public String convertJsonToCsv(Map<String, ArrayList> map) throws IOException {
+    public String createCSV(Map<String, ArrayList> map) throws IOException {
         StringWriter output = new StringWriter();
         try (
                 ICsvListWriter listWriter = new CsvListWriter(output, CsvPreference.STANDARD_PREFERENCE)

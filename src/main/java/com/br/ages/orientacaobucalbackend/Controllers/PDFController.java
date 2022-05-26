@@ -23,7 +23,7 @@ public class PDFController {
 
       @Autowired
       public PDFController(PdfService pdfService) {
-            this.pdfService = pdfService;
+            this.pdfService = new PdfService();
       }
 
       @GetMapping("/pdf")
@@ -39,7 +39,11 @@ public class PDFController {
       }
 
       @PostMapping ("/csv")
-      public String convertCsv(@RequestBody Map<String, ArrayList> map)throws DocumentException, IOException{
-            return new PdfService().convertJsonToCsv(map);
+      public ResponseEntity<String> convertCsv(@RequestBody Map<String, ArrayList> map)throws DocumentException, IOException {
+            String objectName = pdfService.convertJsonToCsv(map);
+            return ResponseEntity
+                  .ok()
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .body(objectName);
       }
 }

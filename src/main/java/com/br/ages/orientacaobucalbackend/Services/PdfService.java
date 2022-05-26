@@ -3,8 +3,13 @@ package com.br.ages.orientacaobucalbackend.Services;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.stereotype.Service;
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.io.CsvBeanReader;
 import org.supercsv.io.CsvListWriter;
+import org.supercsv.io.CsvMapReader;
+import org.supercsv.io.ICsvBeanReader;
 import org.supercsv.io.ICsvListWriter;
+import org.supercsv.io.ICsvMapReader;
 import org.supercsv.prefs.CsvPreference;
 
 import java.io.*;
@@ -23,9 +28,17 @@ public class PdfService {
         this.s3Service = new S3Service(URI);
     }
 
-    public ByteArrayInputStream geraPdf(Map<String, ArrayList> map) throws DocumentException, IOException {
-        String paragraphString = "";
-        int id = 1;
+    public ByteArrayInputStream geraPdf(Map<String, String> map) throws DocumentException, IOException {
+        String prefix = map.get("prefix");
+        String objectName = map.get("objectName");
+        byte[] csvBytes = s3Service.download(objectName, prefix);
+        String csv = new String(csvBytes);
+
+        ICsvMapReader mapReader = new CsvMapReader(new StringReader(csv), CsvPreference.STANDARD_PREFERENCE);
+        
+        final String[] header = mapReader.getHeader(true);
+        Map<String, String> autoexamMap;
+
         Document document = new Document(PageSize.A4);
         ByteArrayOutputStream pdf = new ByteArrayOutputStream();
 
@@ -36,36 +49,50 @@ public class PdfService {
         }
 
         document.open();
-        Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-
-        for (var entry : map.entrySet()) {
-            ArrayList alternativeData = entry.getValue();
-            String question = entry.getKey();
-            String text = alternativeData.get(0).toString();
-            String criticalLevel = alternativeData.get(1).toString();
-            paragraphString = id + ". " + question + " " + text + " [" + criticalLevel + "]";
-
-            document.add(new Paragraph(paragraphString));
-            id++;
+        // Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+        // String paragraphString = "";
+        int id = 1;
+        while( (autoexamMap = mapReader.read(header)) != null ) {
+            document.add(new Paragraph(
+                id + ". " + 
+                autoexamMap.get("Pergunta") + " " + 
+                autoexamMap.get("Resposta")
+            ));
+            
+            id ++;
         }
         document.close();
+        mapReader.close();
+        // String paragraphString = "";
+        // int id = 1;
+        // for (var entry : map.entrySet()) {
+        //     ArrayList alternativeData = entry.getValue();
+        //     String question = entry.getKey();
+        //     String text = alternativeData.get(0).toString();
+        //     String criticalLevel = alternativeData.get(1).toString();
+        //     paragraphString = id + ". " + question + " " + text + " [" + criticalLevel + "]";
+
+        //     document.add(new Paragraph(paragraphString));
+        //     id++;
+        // }
+        // document.close();
 
         return new ByteArrayInputStream(pdf.toByteArray());
     }
 
-    public String getCriticalColour(Map<String, ArrayList> map) throws DocumentException, IOException {
-        String level = "Verde";
-        for (var entry : map.entrySet()) {
-            ArrayList alternativeData = entry.getValue();
-            String criticalLevel = alternativeData.get(1).toString();
+    // public String getCriticalColour(Map<String, ArrayList> map) throws DocumentException, IOException {
+    //     String level = "Verde";
+    //     for (var entry : map.entrySet()) {
+    //         ArrayList alternativeData = entry.getValue();
+    //         String criticalLevel = alternativeData.get(1).toString();
 
-            if (criticalLevel.equals("Vermelho") || level.equals("Vermelho"))
-                level = "Vermelho";
-            else if (criticalLevel.equals("Amarelo"))
-                level = "Amarelo";
-        }
-        return level;
-    }
+    //         if (criticalLevel.equals("Vermelho") || level.equals("Vermelho"))
+    //             level = "Vermelho";
+    //         else if (criticalLevel.equals("Amarelo"))
+    //             level = "Amarelo";
+    //     }
+    //     return level;
+    // }
 
     public String convertJsonToCsv(Map<String, ArrayList> map) throws IOException {
 

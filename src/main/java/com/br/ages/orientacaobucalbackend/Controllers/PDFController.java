@@ -2,13 +2,11 @@ package com.br.ages.orientacaobucalbackend.Controllers;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
 import com.br.ages.orientacaobucalbackend.Services.PdfService;
 import com.itextpdf.text.DocumentException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -28,13 +26,11 @@ public class PDFController {
             this.pdfService = pdfService;
       }
 
-      @PostMapping("/pdf")
-      public ResponseEntity<InputStreamResource> gerarPdf(@RequestBody Map<String, ArrayList> map) throws DocumentException, IOException {
-            HttpHeaders headers = new HttpHeaders();
+      @GetMapping("/pdf")
+      public ResponseEntity<InputStreamResource> gerarPdf(@RequestBody Map<String, String> map) throws DocumentException, IOException {
             ByteArrayInputStream byteArrayInputStream = pdfService.geraPdf(map);
-            String level = pdfService.getCriticalColour(map);
+            HttpHeaders headers = new HttpHeaders();
             headers.add("content-disposition","inline;filename=resultadoAvaliacao.pdf");
-            headers.add("criticalLevel", level);
             return ResponseEntity
                     .ok()
                     .headers(headers)

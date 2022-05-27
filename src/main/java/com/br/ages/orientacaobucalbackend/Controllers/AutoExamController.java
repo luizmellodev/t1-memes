@@ -26,9 +26,9 @@ public class AutoExamController {
             this.autoexamService = new AutoExamService();
       }
 
-      @GetMapping("/pdf")
-      public ResponseEntity<InputStreamResource> createPDF(@RequestBody Map<String, String> map) throws DocumentException, IOException {
-            ByteArrayInputStream byteArrayInputStream = autoexamService.createPDF(map);
+      @GetMapping("/pdf/{objectName}")
+      public ResponseEntity<InputStreamResource> createPDF(@PathVariable String objectName) throws DocumentException, IOException {
+            ByteArrayInputStream byteArrayInputStream = autoexamService.createPDF(objectName);
             HttpHeaders headers = new HttpHeaders();
             headers.add("content-disposition","inline;filename=resultadoAvaliacao.pdf");
             return ResponseEntity

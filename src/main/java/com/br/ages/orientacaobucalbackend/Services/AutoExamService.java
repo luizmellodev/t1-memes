@@ -38,8 +38,7 @@ public class AutoExamService {
         this.s3Service = new S3Service(S3_URI);
     }
 
-    public ByteArrayInputStream createPDF(Map<String, String> map) throws DocumentException, IOException {
-        String objectName = map.get(KEY_OBJECT_NAME);
+    public ByteArrayInputStream createPDF(String objectName) throws DocumentException, IOException {
         byte[] csvBytes = s3Service.download(objectName, S3_PREFIX);
         String csv = new String(csvBytes);
         ICsvMapReader mapReader = new CsvMapReader(new StringReader(csv), CsvPreference.STANDARD_PREFERENCE);

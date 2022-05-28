@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,8 +65,10 @@ public class ContentService {
     public void save(Content content) throws IOException {
         if (content.getPanfleto() != null) {
             S3Service s3 = new S3Service("saude-velho");
-            content.setPanfletoUrl(s3.upload(content.getPanfleto().getName(), "panfleto",
-                    Files.readAllBytes(content.getPanfleto().toPath())));
+            byte[] file = Base64.getDecoder().decode(content.getPanfleto());
+            s3.upload(content.getTitle() + ".pdf", "panfleto", file);
+            content.setPanfletoUrl(
+                    "https://saude-velho.s3.us-east-2.amazonaws.com/panfleto/" + content.getTitle() + ".pdf");
         }
         contentRepository.save(content);
 
@@ -88,6 +91,7 @@ public class ContentService {
             content.setTitle(newContent.getTitle());
             content.setTextUrl(newContent.getTextUrl());
             content.setPanfletoUrl(newContent.getPanfletoUrl());
+            content.setPanfleto(newContent.getPanfleto());
             content.setVideoUrl(newContent.getVideoUrl());
             content.setCategories_ids(newContent.getCategories_ids());
             this.save(content);

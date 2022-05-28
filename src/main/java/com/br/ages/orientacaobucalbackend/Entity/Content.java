@@ -10,6 +10,7 @@ import org.hibernate.mapping.Array;
 
 import javax.persistence.*;
 import java.io.File;
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 
@@ -42,11 +43,11 @@ public class Content {
     @Getter
     @Setter
     @Transient
-    private File panfleto;
+    private String panfleto;
 
     @Getter
     @Setter
-    @Column(unique=true)
+    @Column(unique = true)
     @ManyToMany(mappedBy = "contents")
     private List<Category> categories;
 

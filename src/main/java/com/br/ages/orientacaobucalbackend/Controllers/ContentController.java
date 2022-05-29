@@ -8,13 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController
 @RequestMapping("api/content")
 public class ContentController {
+
     @Autowired
     private ContentService contentService;
 
@@ -41,6 +42,7 @@ public class ContentController {
     @PostMapping
     public ResponseEntity<?> createContent(@RequestBody Content content) {
         try {
+            // content.setPanfletoUrl(this.uploadFileTos3bucket(content.getPanfleto()));
             contentService.save(content);
         } catch (Exception err) {
             return new ResponseEntity<>(err.getMessage(), HttpStatus.BAD_REQUEST);
@@ -49,7 +51,7 @@ public class ContentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateContent(@PathVariable Long id, @RequestBody Content newContent) {
+    public ResponseEntity<?> updateContent(@PathVariable Long id, @RequestBody Content newContent) throws IOException {
         if (contentService.update(id, newContent)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
@@ -65,11 +67,12 @@ public class ContentController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteAllContents(@PathVariable Long id) {
-        if(contentService.deleteById(id)) {
+        if (contentService.deleteById(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
 
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 }

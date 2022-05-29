@@ -37,6 +37,7 @@ public class Category {
     @Getter
     @Setter
     @ManyToMany
+    @Column(unique=true)
     @JoinTable(
             name = "category_content",
             joinColumns = @JoinColumn(name = "category_id"),

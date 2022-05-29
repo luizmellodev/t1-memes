@@ -2,13 +2,11 @@ package com.br.ages.orientacaobucalbackend.Controllers;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.br.ages.orientacaobucalbackend.Services.PdfService;
+import com.br.ages.orientacaobucalbackend.Services.AutoExamService;
 import com.itextpdf.text.DocumentException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -17,26 +15,35 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/pdf")
+@RequestMapping("api/autoexam")
 @CrossOrigin
-public class PDFController {
+public class AutoExamController {
 
-      private final PdfService pdfService;
+      private final AutoExamService autoexamService;
 
       @Autowired
-      public PDFController(PdfService pdfService) {
-            this.pdfService = pdfService;
+      public AutoExamController(AutoExamService pdfService) {
+            this.autoexamService = new AutoExamService();
       }
 
-      @PostMapping
-      public ResponseEntity<InputStreamResource> geraPdf(@RequestBody Map<String, ArrayList> map) throws DocumentException, IOException {
+      @GetMapping("/pdf/{objectName}")
+      public ResponseEntity<InputStreamResource> createPDF(@PathVariable String objectName) throws DocumentException, IOException {
+            ByteArrayInputStream byteArrayInputStream = autoexamService.createPDF(objectName);
             HttpHeaders headers = new HttpHeaders();
-            ByteArrayInputStream byteArrayInputStream = pdfService.geraPdf(map);
             headers.add("content-disposition","inline;filename=resultadoAvaliacao.pdf");
             return ResponseEntity
                     .ok()
                     .headers(headers)
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(new InputStreamResource(byteArrayInputStream));
+      }
+
+      @PostMapping ("/csv")
+      public ResponseEntity<String> createCSV(@RequestBody Map<String, ArrayList> map)throws DocumentException, IOException {
+            String objectNameJson = autoexamService.createCSV(map);
+            return ResponseEntity
+                  .ok()
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .body(objectNameJson);
       }
 }

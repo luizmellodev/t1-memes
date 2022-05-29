@@ -74,15 +74,14 @@ public class QuestionService {
         if (oldQuestion.isPresent()) {
             Question question = oldQuestion.get();
             question.setQuestionText(newQuestion.getQuestionText());
-            for (Alternative alternative : newQuestion.getAlternatives()) {
-                if(alternative.getId() != null) {
-                    if(alternativeRepository.findById(alternative.getId()).isPresent()) {
-                        alternativeController.updateAlternative(alternative.getId(), alternative);
-                    }
-                } else {
-                    alternativeController.registerNewAlternative(newQuestion.getId(), alternative);
+            alternativeRepository.deleteAll();
+
+            if(!(newQuestion.getAlternatives().isEmpty())) {
+                for(Alternative alternative : newQuestion.getAlternatives()) {
+                    alternativeController.registerNewAlternative(question.getId(), alternative);
                 }
             }
+
             return true;
         } else {
             throw new NullPointerException("this question doesn't exist.");

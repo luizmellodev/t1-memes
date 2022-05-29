@@ -34,11 +34,10 @@ build/
 ### VS Code ###
 .vscode/
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 ### Postgres ###
 postgres-data/
-=======
+test/
+
 # target
 target/
 

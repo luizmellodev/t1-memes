@@ -27,23 +27,25 @@ public class AutoExamController {
       }
 
       @GetMapping("/pdf/{objectName}")
-      public ResponseEntity<InputStreamResource> createPDF(@PathVariable String objectName) throws DocumentException, IOException {
+      public ResponseEntity<InputStreamResource> createPDF(@PathVariable String objectName)
+                  throws DocumentException, IOException {
             ByteArrayInputStream byteArrayInputStream = autoexamService.createPDF(objectName);
             HttpHeaders headers = new HttpHeaders();
-            headers.add("content-disposition","inline;filename=resultadoAvaliacao.pdf");
+            headers.add("content-disposition", "inline;filename=resultadoAvaliacao.pdf");
             return ResponseEntity
-                    .ok()
-                    .headers(headers)
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .body(new InputStreamResource(byteArrayInputStream));
+                        .ok()
+                        .headers(headers)
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .body(new InputStreamResource(byteArrayInputStream));
       }
 
-      @PostMapping ("/csv")
-      public ResponseEntity<String> createCSV(@RequestBody Map<String, ArrayList> map)throws DocumentException, IOException {
+      @PostMapping("/csv")
+      public ResponseEntity<String> createCSV(@RequestBody Map<String, ArrayList> map)
+                  throws DocumentException, IOException {
             String objectNameJson = autoexamService.createCSV(map);
             return ResponseEntity
-                  .ok()
-                  .contentType(MediaType.APPLICATION_JSON)
-                  .body(objectNameJson);
+                        .ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(objectNameJson);
       }
 }

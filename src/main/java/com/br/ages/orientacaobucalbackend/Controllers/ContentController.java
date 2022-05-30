@@ -20,14 +20,9 @@ public class ContentController {
     private ContentService contentService;
 
     @GetMapping
-    public ResponseEntity<List<Content>> getAllContents(@RequestParam String search) {
-        List<Content> response;
-        if(search.isBlank()){
-            response = contentService.list();
-        }
-        else{
-            response = contentService.list(); //TODO filtrar os resultados pela busca
-        }
+    public ResponseEntity<List<Content>> getAllContents() {
+
+        List<Content> response = contentService.list();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Range", String.valueOf(response.size()));
         headers.add("Access-Control-Expose-Headers", "Content-Range");

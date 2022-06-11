@@ -34,19 +34,20 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCategory(@RequestBody Category category ) {
+    public ResponseEntity<?> createCategory(@RequestBody Category category) {
         try {
             categoryService.save(category);
+            return new ResponseEntity<>(category, HttpStatus.OK);
         } catch (Exception err) {
             return new ResponseEntity<>(err.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Category newCategory) {
         if (categoryService.update(id, newCategory)) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(newCategory, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -58,13 +59,13 @@ public class CategoryController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<?> deleteAllCategory(@PathVariable Long id) {
-        if(categoryService.deleteById(id)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            Category response = categoryService.deleteById(id);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception err) {
+            return new ResponseEntity<>(err.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

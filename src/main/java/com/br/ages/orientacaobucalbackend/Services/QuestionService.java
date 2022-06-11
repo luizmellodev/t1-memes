@@ -8,6 +8,7 @@ import com.br.ages.orientacaobucalbackend.Entity.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,15 +45,20 @@ public class QuestionService {
             return null;
         }
     }
-    public Long addNewQuestion(Question question) {
+    public Question addNewQuestion(Question question) {
         try{
             questionRepository.save(question);
             for(Alternative alternative : question.getAlternatives()){
                 alternativeController.registerNewAlternative(question.getId(), alternative);
             }
-            return question.getId();
+            return question;
         } catch (Exception e) { e.printStackTrace(); }
         return null;
+    }
+
+    public void deleteQuestion(Long questionId) {
+        questionRepository.deleteQuestionAlternatives(questionId);
+        questionRepository.deleteQuestion(questionId);
     }
 
     /**
@@ -60,21 +66,23 @@ public class QuestionService {
      *
      * @param questionId The id of the question to be deleted
      */
-    public void deleteQuestion(Long questionId) {
+    public Question deleteQuestionById(Long questionId) throws IOException {
         boolean exists = questionRepository.existsById(questionId);
-
-        if (!exists) {
-            throw new IllegalStateException("question with id " + questionId + " does not exist");
+        if (exists) {
+            Question questionToBeDeleted = getQuestionById(questionId);
+            deleteQuestion(questionId);
+            return questionToBeDeleted;
+        } else {
+            throw new NullPointerException("this content doesn't exist.");
         }
-        questionRepository.deleteById(questionId);
     }
 
-    public boolean updateQuestion(Long id, Question newQuestion) {
+    public Question updateQuestion(Long id, Question newQuestion) {
         Optional<Question> oldQuestion = questionRepository.findById(id);
         if (oldQuestion.isPresent()) {
             Question question = oldQuestion.get();
             question.setQuestionText(newQuestion.getQuestionText());
-            alternativeRepository.deleteAll();
+            questionRepository.deleteQuestionAlternatives(id);
 
             if(!(newQuestion.getAlternatives().isEmpty())) {
                 for(Alternative alternative : newQuestion.getAlternatives()) {
@@ -82,7 +90,7 @@ public class QuestionService {
                 }
             }
 
-            return true;
+            return newQuestion;
         } else {
             throw new NullPointerException("this question doesn't exist.");
         }

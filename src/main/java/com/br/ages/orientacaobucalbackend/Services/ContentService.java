@@ -51,14 +51,19 @@ public class ContentService {
         contentRepository.deleteAll();
     }
 
-    public boolean deleteById(Long id) {
+    public void deleteContent(Long content_id) {
+        contentRepository.deleteContent(content_id);
+    }
+
+    public Content deleteById(Long id) throws IOException {
         Optional<Content> content = this.findById(id);
-        deleteCategory(id);
         if (content.isPresent()) {
-            contentRepository.delete(content.get());
-            return true;
+            Content contentToBeDeleted = content.get();
+            deleteCategory(id);
+            deleteContent(id);
+            return contentToBeDeleted;
         } else {
-            return false;
+            throw new NullPointerException("this content doesn't exist.");
         }
     }
 
@@ -83,7 +88,7 @@ public class ContentService {
         }
     }
 
-    public boolean update(Long id, Content newContent) throws IOException {
+    public Content update(Long id, Content newContent) throws IOException {
         Optional<Content> oldContent = this.findById(id);
         deleteCategory(id);
         if (oldContent.isPresent()) {
@@ -95,7 +100,7 @@ public class ContentService {
             content.setVideoUrl(newContent.getVideoUrl());
             content.setCategories_ids(newContent.getCategories_ids());
             this.save(content);
-            return true;
+            return content;
         } else {
             throw new NullPointerException("this content doesn't exist.");
         }

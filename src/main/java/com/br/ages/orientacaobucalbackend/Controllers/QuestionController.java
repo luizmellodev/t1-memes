@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -38,21 +39,32 @@ public class QuestionController {
     }
 
     @PostMapping
-    public Long registerNewQuestion(@RequestBody Question question) {
-        return questionService.addNewQuestion(question);
+    public ResponseEntity<?> registerNewQuestion(@RequestBody Question question) {
+        try {
+            questionService.addNewQuestion(question);
+            return new ResponseEntity<>(question, HttpStatus.OK);
+        } catch (Exception err) {
+            return new ResponseEntity<>(err.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping(path = "{questionId}")
-    public void deleteQuestion(@PathVariable("questionId") Long questionId) {
-        questionService.deleteQuestion(questionId);
+    public ResponseEntity<?> deleteQuestion(@PathVariable("questionId") Long questionId) {
+        try {
+            Question response = questionService.deleteQuestionById(questionId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (IOException err) {
+            return new ResponseEntity<>(err.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateQuestion(@PathVariable Long id, @RequestBody Question newQuestion) {
-        if (questionService.updateQuestion(id, newQuestion)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            Question response = questionService.updateQuestion(id, newQuestion);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception err) {
+            return new ResponseEntity<>(err.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

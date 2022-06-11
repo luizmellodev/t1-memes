@@ -14,16 +14,14 @@ import java.util.Set;
 @Service
 public class CategoryService {
 
-
-    private final CategoryRepository  categoryRepository;
+    private final CategoryRepository categoryRepository;
     private final ContentRepository contentRepository;
 
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository,ContentRepository contentRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ContentRepository contentRepository) {
         this.categoryRepository = categoryRepository;
         this.contentRepository = contentRepository;
     }
-
 
     public List<Category> list() {
         return categoryRepository.findAll();
@@ -37,19 +35,20 @@ public class CategoryService {
         categoryRepository.deleteAll();
     }
 
-    public boolean deleteById(Long id) {
+    public Category deleteById(Long id) {
         Optional<Category> category = this.findById(id);
         if (category.isPresent()) {
-            categoryRepository.delete(category.get());
-            return true;
+            Category deletedCoCategory = category.get();
+            categoryRepository.delete(deletedCoCategory);
+            return deletedCoCategory;
         } else {
-            return false;
+            throw new NullPointerException("this content doesn't exist.");
         }
     }
 
     public void save(Category category, Long content_id) {
         Optional<Content> content = contentRepository.findById(content_id);
-        if(content.isPresent()) {
+        if (content.isPresent()) {
             category.getContents().add(content.get());
             System.out.println(category.getContents());
             categoryRepository.saveAndFlush(category);
@@ -61,7 +60,7 @@ public class CategoryService {
     }
 
     public boolean update(Long id, Category newCategory) {
-        Optional<Category> oldCategory= this.findById(id);
+        Optional<Category> oldCategory = this.findById(id);
         if (oldCategory.isPresent()) {
             Category category = oldCategory.get();
             category.setName(newCategory.getName());

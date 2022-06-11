@@ -21,6 +21,7 @@ public class ContentController {
 
     @GetMapping
     public ResponseEntity<List<Content>> getAllContents() {
+
         List<Content> response = contentService.list();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Range", String.valueOf(response.size()));
@@ -44,18 +45,19 @@ public class ContentController {
         try {
             // content.setPanfletoUrl(this.uploadFileTos3bucket(content.getPanfleto()));
             contentService.save(content);
+            return new ResponseEntity<>(content, HttpStatus.OK);
         } catch (Exception err) {
             return new ResponseEntity<>(err.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateContent(@PathVariable Long id, @RequestBody Content newContent) throws IOException {
-        if (contentService.update(id, newContent)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> updateContent(@PathVariable Long id, @RequestBody Content newContent){
+        try {
+            Content response = contentService.update(id, newContent);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (IOException err) {
+            return new ResponseEntity<>(err.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -65,13 +67,13 @@ public class ContentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteAllContents(@PathVariable Long id) {
-        if (contentService.deleteById(id)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteAllContents(@PathVariable Long id) throws IOException {
+        try {
+            Content response = contentService.deleteById(id);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (IOException err) {
+            return new ResponseEntity<>(err.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

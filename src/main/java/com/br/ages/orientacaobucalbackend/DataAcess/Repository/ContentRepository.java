@@ -10,11 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface ContentRepository extends JpaRepository<Content, Long> {
-    //DELETE FROM public.category_content
-    //	WHERE category_id= and content_id = ;
     @Transactional
     @Modifying
-    @Query(value = "DELETE from category_content cc where cc.content_id =:content_id",  nativeQuery = true)
+    @Query(value = "DELETE FROM category_content cc WHERE cc.content_id =:content_id",  nativeQuery = true)
     void deleteCategoryContent(@Param("content_id") Long content_id);
 
 
@@ -22,4 +20,9 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
     @Modifying
     @Query(value = "TRUNCATE TABLE category_content", nativeQuery = true)
     void deleteAllCategoryContent();
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM content c WHERE c.id =:content_id", nativeQuery = true)
+    void deleteContent(@Param("content_id") Long content_id);
 }

@@ -1,6 +1,6 @@
 package com.br.ages.orientacaobucalbackend.Controllers;
 
-import com.br.ages.orientacaobucalbackend.DataAcess.Repository.UserLoginDto;
+import com.br.ages.orientacaobucalbackend.Entity.Dto.UserLoginDto;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.UserRepository;
 import com.br.ages.orientacaobucalbackend.Entity.User;
 import com.br.ages.orientacaobucalbackend.enums.Role;

@@ -7,7 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "credentials")
+@Table(name = "credentials", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -31,31 +31,41 @@ public class RecommendedSourceService {
         return recommendedSourceRepository.findById(id);
     }
 
-    public Long addNewRecommendedSource(RecommendedSource recommendedSource, Long contentId) {
+    public Optional<RecommendedSource> addNewRecommendedSource(RecommendedSource recommendedSource, Long contentId) {
         Optional<Content> content = contentRepository.findById(contentId);
         if (content.isPresent()) {
             recommendedSource.setContent(content.get());
             recommendedSourceRepository.save(recommendedSource);
-        }
-        return recommendedSource.getId();
-    }
-
-    public RecommendedSource updateRecommendedsource(Long id, String title, String description,
-            RecommendedSourceService recommendedSourceService) {
-
-        Optional<RecommendedSource> recommendedSource = recommendedSourceRepository.findById(id);
-                //.orElseThrow(() -> new IllegalStateException("RecommendedService with id " + id + " does not exist"));
-
-        if (recommendedSource.isPresent()) {
-            recommendedSourceRepository.save(recommendedSource.get());
-            return recommendedSource.get();
+            return Optional.of(recommendedSource);
         }
 
-        return null;
+        
+        return Optional.empty();
     }
 
-    public Long deleteRecommendedSource(Long id) {
-        return (long) 0;
+    public Optional<RecommendedSource> updateRecommendedsource(Long id, RecommendedSource recommendedSource) {
+        Optional<RecommendedSource> oldResponse = recommendedSourceRepository.findById(id);
+        if (oldResponse.isPresent()) {
+            RecommendedSource rs = oldResponse.get();
+            rs.setContent(recommendedSource.getContent());
+            rs.setDescription(recommendedSource.getDescription());
+            rs.setLink(recommendedSource.getLink());
+            rs.setTitle(recommendedSource.getTitle());
+            recommendedSourceRepository.save(rs);
+            return Optional.of(rs);
+        }else {
+            return Optional.empty();
+        }
     }
 
+    public Optional<Long> deleteRecommendedSource(Long id) {
+        boolean exists = recommendedSourceRepository.existsById(id);
+
+        if (!exists) {
+            return Optional.empty();
+        }
+
+        recommendedSourceRepository.deleteById(id);
+        return Optional.of(id);
+    }
 }

@@ -12,14 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ContentRepository extends JpaRepository<Content, Long> {
     @Transactional
     @Modifying
-    @Query(value = "DELETE FROM category_content cc WHERE cc.content_id =:content_id",  nativeQuery = true)
+    @Query(value = "DELETE FROM category_content cc WHERE cc.content_id =:content_id", nativeQuery = true)
     void deleteCategoryContent(@Param("content_id") Long content_id);
-
 
     @Transactional
     @Modifying
     @Query(value = "TRUNCATE TABLE category_content", nativeQuery = true)
     void deleteAllCategoryContent();
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM recommended_source r WHERE r.content_id =:contentId", nativeQuery = true)
+    void deleteAllContentRecommendedSource(@Param("contentId") Long contentId);
 
     @Transactional
     @Modifying

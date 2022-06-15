@@ -18,6 +18,8 @@ public class Content {
     @Getter
     @Setter
     @NonNull
+    @Lob
+    @Column
     private String textUrl;
 
     @Getter

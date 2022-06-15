@@ -3,6 +3,7 @@ package com.br.ages.orientacaobucalbackend.Services;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.ContentRepository;
 import com.br.ages.orientacaobucalbackend.Entity.Category;
 import com.br.ages.orientacaobucalbackend.Entity.Content;
+import com.br.ages.orientacaobucalbackend.Entity.RecommendedSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +17,14 @@ import java.util.Optional;
 public class ContentService {
 
     private final CategoryService categoryService;
+    private final RecommendedSourceService recommendedSourceService;
     private final ContentRepository contentRepository;
 
     @Autowired
-    public ContentService(CategoryService categoryService, ContentRepository contentRepository) {
+    public ContentService(CategoryService categoryService, ContentRepository contentRepository, RecommendedSourceService recommendedSourceService) {
         this.categoryService = categoryService;
         this.contentRepository = contentRepository;
+        this.recommendedSourceService = recommendedSourceService;
     }
 
     public List<Content> list() {
@@ -76,6 +79,12 @@ public class ContentService {
                     "https://saude-velho.s3.us-east-2.amazonaws.com/panfleto/" + content.getTitle() + ".pdf");
         }
         contentRepository.save(content);
+
+        if (content.getRecommendedSource().size() > 0) {
+            for (RecommendedSource source: content.getRecommendedSource()) {
+                recommendedSourceService.addNewRecommendedSource(source, content.getId());
+            }
+        }
 
         if (content.getCategories_ids().size() > 0) {
             for (int i = 1; i <= content.getCategories_ids().size(); i++) {

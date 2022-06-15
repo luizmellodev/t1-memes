@@ -32,5 +32,6 @@ public class Question {
 
     @Getter
     @Setter
+    @NonNull
     private String questionText;
 }

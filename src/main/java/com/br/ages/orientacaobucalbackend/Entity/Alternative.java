@@ -27,6 +27,7 @@ public class Alternative {
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter
     @Setter
+    @NonNull
     // @JsonBackReference
     @JoinColumn(name = "question_id")
     @JsonIgnore
@@ -34,9 +35,11 @@ public class Alternative {
 
     @Getter
     @Setter
+    @NonNull
     private String alternativeText;
     
     @Getter
     @Setter
+    @NonNull
     private AlternativeCriticalLevel criticalLevel;
 }

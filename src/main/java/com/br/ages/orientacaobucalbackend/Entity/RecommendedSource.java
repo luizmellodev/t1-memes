@@ -17,14 +17,17 @@ public class RecommendedSource {
 
     @Getter
     @Setter
+    @NonNull
     private String title;
 
     @Getter
     @Setter
+    @NonNull
     private String description;
 
     @Getter
     @Setter
+    @NonNull
     private String link;
 
     @ManyToOne(fetch = FetchType.LAZY)

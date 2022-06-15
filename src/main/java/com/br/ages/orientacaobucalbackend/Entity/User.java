@@ -15,14 +15,18 @@ public class User {
     private Long id;
     @Getter
     @Setter
+    @NonNull
     private String password;
     @Getter
     @Setter
+    @NonNull
     private String name;
     @Getter
     @Setter
+    @NonNull
     private String email;
     @Getter
     @Setter
+    @NonNull
     private Role role;
 }

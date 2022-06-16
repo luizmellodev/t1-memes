@@ -12,9 +12,7 @@ import java.util.List;
 public class Question {
     @Getter
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Getter

@@ -1,15 +1,11 @@
 package com.br.ages.orientacaobucalbackend.Controllers;
 
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 
 import com.br.ages.orientacaobucalbackend.Services.RecommendedSourceService;
 import com.br.ages.orientacaobucalbackend.Entity.RecommendedSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

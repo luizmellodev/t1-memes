@@ -48,13 +48,17 @@ public class ContentService {
         contentRepository.deleteCategoryContent(content_id);
     }
 
+    public void deleteRecommendedSource(Long content_id) {
+        contentRepository.deleteRecommendedSourceContent(content_id);
+    }
+
     public void deleteAll() {
         contentRepository.deleteAllCategoryContent();
+        contentRepository.deleteAllContentRecommendedSource();
         contentRepository.deleteAll();
     }
 
     public void deleteContent(Long content_id) {
-        contentRepository.deleteAllContentRecommendedSource(content_id);
         contentRepository.deleteContent(content_id);
     }
 
@@ -63,6 +67,7 @@ public class ContentService {
         if (content.isPresent()) {
             Content contentToBeDeleted = content.get();
             deleteCategory(id);
+            deleteRecommendedSource(id);
             deleteContent(id);
             return contentToBeDeleted;
         } else {
@@ -100,6 +105,7 @@ public class ContentService {
     public Content update(Long id, Content newContent) throws IOException {
         Optional<Content> oldContent = this.findById(id);
         deleteCategory(id);
+        deleteRecommendedSource(id);
         if (oldContent.isPresent()) {
             Content content = oldContent.get();
             content.setTitle(newContent.getTitle());
@@ -108,6 +114,8 @@ public class ContentService {
             content.setPanfleto(newContent.getPanfleto());
             content.setVideoUrl(newContent.getVideoUrl());
             content.setCategories_ids(newContent.getCategories_ids());
+            content.setRecommendedSource(newContent.getRecommendedSource());
+
             this.save(content);
             return content;
         } else {

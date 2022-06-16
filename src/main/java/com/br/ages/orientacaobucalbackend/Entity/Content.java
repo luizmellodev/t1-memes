@@ -46,7 +46,7 @@ public class Content {
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL)
     private List<RecommendedSource> recommendedSource;
 
     @Getter

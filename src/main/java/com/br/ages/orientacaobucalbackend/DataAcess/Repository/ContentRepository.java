@@ -17,13 +17,18 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
 
     @Transactional
     @Modifying
+    @Query(value = "DELETE FROM recommended_source r WHERE r.content_id =:contentId", nativeQuery = true)
+    void deleteRecommendedSourceContent(@Param("contentId") Long contentId);
+
+    @Transactional
+    @Modifying
     @Query(value = "TRUNCATE TABLE category_content", nativeQuery = true)
     void deleteAllCategoryContent();
 
     @Transactional
     @Modifying
-    @Query(value = "DELETE FROM recommended_source r WHERE r.content_id =:contentId", nativeQuery = true)
-    void deleteAllContentRecommendedSource(@Param("contentId") Long contentId);
+    @Query(value = "TRUNCATE TABLE recommended_source", nativeQuery = true)
+    void deleteAllContentRecommendedSource();
 
     @Transactional
     @Modifying

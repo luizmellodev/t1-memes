@@ -59,6 +59,7 @@ public class ContentService {
     }
 
     public void deleteContent(Long content_id) {
+        contentRepository.deleteAllContentRecommendedSource(content_id);
         contentRepository.deleteContent(content_id);
     }
 

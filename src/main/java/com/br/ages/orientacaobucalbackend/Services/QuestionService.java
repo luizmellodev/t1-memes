@@ -1,6 +1,5 @@
 package com.br.ages.orientacaobucalbackend.Services;
 
-import com.br.ages.orientacaobucalbackend.Common.QuestionBadRequest;
 import com.br.ages.orientacaobucalbackend.Controllers.AlternativeController;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.AlternativeRepository;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.QuestionRepository;
@@ -78,7 +77,7 @@ public class QuestionService {
         Optional<Question> question = getQuestionById(questionId);
         if (question.isPresent()) {
             questionRepository.deleteQuestionAlternatives(questionId);
-            questionRepository.deleteQuestion(questionId);
+            questionRepository.deleteById(questionId);
         }
         return question;
     }

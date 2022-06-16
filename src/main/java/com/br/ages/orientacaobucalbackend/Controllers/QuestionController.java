@@ -6,7 +6,7 @@ import com.br.ages.orientacaobucalbackend.Entity.Question;
 import com.br.ages.orientacaobucalbackend.Services.QuestionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+// import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +28,12 @@ public class QuestionController {
 
     @GetMapping
     public ResponseEntity<List<Question>> getQuestionsWithAlternatives() {
-        List<Question> response = questionService.getQuestionsWithAlternatives();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Range", String.valueOf(response.size()));
-        headers.add("Access-Control-Expose-Headers", "Content-Range");
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
+        List<Question> questions = questionService.getQuestionsWithAlternatives();
+        // HttpHeaders headers = new HttpHeaders();
+        // headers.add("Content-Range", String.valueOf(response.size()));
+        // headers.add("Access-Control-Expose-Headers", "Content-Range");
+        // return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
+        return new ResponseEntity<>(questions, HttpStatus.OK);
     }
 
     @GetMapping(value="/{questionId}")
@@ -89,7 +90,7 @@ public class QuestionController {
 
     @DeleteMapping(path = "/delete")
     public ResponseEntity<?> deleteAllQuestions() {
-        List<Long> ids = questionService.deleteAllQuestions();
-        return new ResponseEntity<>(ids, HttpStatus.OK);
+        List<Long> questionIds = questionService.deleteAllQuestions();
+        return new ResponseEntity<>(questionIds, HttpStatus.OK);
     }
 }

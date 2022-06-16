@@ -1,9 +1,9 @@
 package com.br.ages.orientacaobucalbackend.Services;
 
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.CategoryRepository;
-import com.br.ages.orientacaobucalbackend.DataAcess.Repository.ContentRepository;
+// import com.br.ages.orientacaobucalbackend.DataAcess.Repository.ContentRepository;
 import com.br.ages.orientacaobucalbackend.Entity.Category;
-import com.br.ages.orientacaobucalbackend.Entity.Content;
+// import com.br.ages.orientacaobucalbackend.Entity.Content;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,63 +14,65 @@ import java.util.Optional;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final ContentRepository contentRepository;
+    // private final ContentRepository contentRepository;
 
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository, ContentRepository contentRepository) {
+    public CategoryService(CategoryRepository categoryRepository) { //, ContentRepository contentRepository) {
         this.categoryRepository = categoryRepository;
-        this.contentRepository = contentRepository;
+        // this.contentRepository = contentRepository;
     }
 
-    public List<Category> list() {
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
-    public Optional<Category> findById(Long id) {
-        return categoryRepository.findById(id);
+    public Optional<Category> findCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId);
     }
 
-    public void deleteAll() {
-        categoryRepository.deleteAll();
-    }
-
-    public Category deleteById(Long id) {
-        Optional<Category> category = this.findById(id);
-        if (category.isPresent()) {
-            Category deletedCoCategory = category.get();
-            categoryRepository.delete(deletedCoCategory);
-            return deletedCoCategory;
+    public Optional<Category> addNewCategory(Category category) throws IllegalArgumentException { 
+        if ((category.getImageUrl() != null) && (category.getColor() != null) && (category.getName() != null)) {
+            return Optional.of(categoryRepository.save(category));
         } else {
-            throw new NullPointerException("this content doesn't exist.");
+            return Optional.empty();
         }
     }
 
-    public void save(Category category, Long content_id) {
-        Optional<Content> content = contentRepository.findById(content_id);
-        if (content.isPresent()) {
-            category.getContents().add(content.get());
-            System.out.println(category.getContents());
-            categoryRepository.saveAndFlush(category);
-        }
-    }
-
-    public void save(Category category) {
-        categoryRepository.save(category);
-    }
-
-    public boolean update(Long id, Category newCategory) {
-        Optional<Category> oldCategory = this.findById(id);
+    public Optional<Category> updateCategory(Long categoryId, Category newCategory) {
+        Optional<Category> oldCategory = categoryRepository.findById(categoryId);
         if (oldCategory.isPresent()) {
             Category category = oldCategory.get();
-            category.setName(newCategory.getName());
-            category.setColor(newCategory.getColor());
-            category.setImageUrl(newCategory.getImageUrl());
-            category.setContents(newCategory.getContents());
-
-            this.save(category);
-            return true;
+            if (newCategory.getName() != null) {category.setName(newCategory.getName());}
+            if (newCategory.getColor() != null) {category.setColor(newCategory.getColor());}
+            if (newCategory.getImageUrl() != null) {category.setImageUrl(newCategory.getImageUrl());}
+            // if (newCategory.getContents() != null) {category.setContents(newCategory.getContents());} // never used
+            return Optional.of(categoryRepository.save(category));
         } else {
-            throw new NullPointerException("this category doesn't exist.");
+            return Optional.empty();
         }
+    }
+
+    // public void save(Category category, Long content_id) {
+    //     Optional<Content> content = contentRepository.findById(content_id);
+    //     if (content.isPresent()) {
+    //         category.getContents().add(content.get());
+    //         System.out.println(category.getContents());
+    //         categoryRepository.saveAndFlush(category);
+    //     }
+    // }
+
+    public Optional<Category> deleteCategoryById(Long categoryId) {
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        if (category.isPresent()) {
+            categoryRepository.deleteCategoryContentByCategoryId(categoryId);
+            categoryRepository.deleteById(categoryId);
+        }
+        return category;
+    }
+
+    public List<Long> deleteAllCategories() {
+        List<Long> ids = categoryRepository.getAllIds();
+        categoryRepository.deleteAll();
+        return ids;
     }
 }

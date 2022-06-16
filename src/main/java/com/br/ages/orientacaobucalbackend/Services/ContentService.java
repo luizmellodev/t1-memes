@@ -42,7 +42,7 @@ public class ContentService {
     }
 
     public void deleteCategory(Long content_id) {
-        contentRepository.deleteCategoryContent(content_id);
+        contentRepository.deleteCategoryContentByContentId(content_id);
     }
 
     public void deleteAll() {
@@ -79,10 +79,10 @@ public class ContentService {
 
         if (content.getCategories_ids().size() > 0) {
             for (int i = 1; i <= content.getCategories_ids().size(); i++) {
-                Optional<Category> aux = categoryService.findById(content.getCategories_ids().get(i - 1));
+                Optional<Category> aux = categoryService.findCategoryById(content.getCategories_ids().get(i - 1));
                 if (aux.isPresent()) {
                     aux.get().getContents().add(content);
-                    categoryService.update(aux.get().getId(), aux.get());
+                    categoryService.updateCategory(aux.get().getId(), aux.get());
                 }
             }
         }

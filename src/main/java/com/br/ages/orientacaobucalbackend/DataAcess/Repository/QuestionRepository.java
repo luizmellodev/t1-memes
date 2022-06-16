@@ -16,13 +16,8 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "DELETE FROM alternative a WHERE a.question_id =:questionId", nativeQuery = true)
+    @Query(value = "DELETE FROM alternative a WHERE a.question_id=:questionId", nativeQuery = true)
     void deleteQuestionAlternatives(@Param("questionId") Long questionId);
-
-    @Transactional
-    @Modifying
-    @Query(value = "DELETE FROM question q WHERE q.id =:questionId", nativeQuery = true)
-    void deleteQuestion(@Param("questionId") Long questionId);
 
     @Query(value = "SELECT id FROM question", nativeQuery = true)
     List<Long> getAllIds();

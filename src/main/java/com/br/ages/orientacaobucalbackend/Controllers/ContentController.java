@@ -23,11 +23,11 @@ public class ContentController {
 
     @GetMapping
     public ResponseEntity<List<Content>> getAllContents() {
-        List<Content> response = contentService.getAllContents();
+        List<Content> contents = contentService.getAllContents();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Range", String.valueOf(response.size()));
+        headers.add("Content-Range", String.valueOf(contents.size()));
         headers.add("Access-Control-Expose-Headers", "Content-Range");
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
+        return new ResponseEntity<>(contents, headers, HttpStatus.OK);
     }
 
     @GetMapping("/{contentId}")

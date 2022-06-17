@@ -5,6 +5,8 @@ import com.br.ages.orientacaobucalbackend.DataAcess.Repository.QuestionRepositor
 import com.br.ages.orientacaobucalbackend.Entity.Alternative;
 import com.br.ages.orientacaobucalbackend.Entity.Question;
 import com.br.ages.orientacaobucalbackend.enums.AlternativeCriticalLevel;
+
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,61 +21,59 @@ public class AlternativeService {
     @Autowired
     QuestionRepository questionRepository;
 
-    /**
-     * Get a list of all of the alternatives
-     *
-     * @return
-     */
-    public List<Alternative> getAlternatives() {
+    public List<Alternative> getAllAlternatives() {
         return alternativeRepository.findAll();
     }
 
-    /**
-     * Get a list of alternatives linked to a question
-     *
-     * @param questionId The id of the question
-     */
-    public void getAlternativesByQuestionId(Long questionId) {
-        // TODO implementar busca de alternativas por id da pergunta
+    public Optional<Alternative> getAlternativesByQuestionId(Long alternativeId) {
+        return alternativeRepository.findById(alternativeId);
     }
 
-    /**
-     * Add a new alternative
-     *
-     * @param alternative The alternative to be added
-     */
-    public void addNewAlternative(Alternative alternative, long question_id) {
-        // TODO adicionar possíveis validações
-        Optional<Question> question = questionRepository.findById(question_id);
-        if (question.isPresent()) {
-            alternative.setQuestion(question.get());
-            alternativeRepository.save(alternative);
+    public Optional<Alternative> addNewAlternative(Long questionId, Alternative alternative) {
+        Optional<Question> question = questionRepository.findById(questionId);
+        if(question.isPresent()) {
+            if ((alternative.getCriticalLevel() != null) && (alternative.getAlternativeText() != null)) {
+                if(EnumUtils.isValidEnum(AlternativeCriticalLevel.class, alternative.getCriticalLevel().toString())) {
+                    alternative.setQuestion(question.get());
+                    System.out.println(alternative);
+                    return Optional.of(alternativeRepository.save(alternative));
+                }
+            }
+            throw new IllegalArgumentException();
+        } else {
+            return Optional.empty();
         }
     }
 
-    /**
-     * Delete an alternative by id
-     *
-     * @param alternativeId
-     */
-    public void deleteAlternative(Long alternativeId) {
-        boolean exists = alternativeRepository.existsById(alternativeId);
-
-        if (!exists) {
-            throw new IllegalStateException("alternative with id " + alternativeId + " does not exist");
+    public Optional<Alternative> updateAlternative(Long alternativeId, Alternative newAlternative) {
+        Optional<Alternative> oldAlternative = alternativeRepository.findById(alternativeId);
+        if (oldAlternative.isPresent()) {
+            Alternative alternative = oldAlternative.get();
+            if(newAlternative.getCriticalLevel() != null) {
+                if(EnumUtils.isValidEnum(AlternativeCriticalLevel.class, newAlternative.getCriticalLevel().toString())) {
+                    alternative.setCriticalLevel(newAlternative.getCriticalLevel());
+                } else {
+                    throw new IllegalArgumentException();
+                }
+            }
+            if (newAlternative.getAlternativeText() != null) {alternative.setAlternativeText(newAlternative.getAlternativeText());}
+            return Optional.of(alternativeRepository.save(alternative));  
+        } else {
+            return Optional.empty();
         }
-
-        alternativeRepository.deleteById(alternativeId);
     }
 
-    public void updateAlternative(Long alternativeId, String alternativeText, AlternativeCriticalLevel criticalLevel) {
-        Alternative alternative = alternativeRepository.findById(alternativeId).orElseThrow(() -> new IllegalStateException("alternative with id " + alternativeId + " does not exist"));
-        if(criticalLevel != null) {
-            alternative.setCriticalLevel(criticalLevel);
+    public Optional<Alternative> deleteAlternativeById(Long alternativeId) {
+        Optional<Alternative> alternative = alternativeRepository.findById(alternativeId);
+        if (alternative.isPresent()) {
+            alternativeRepository.deleteById(alternativeId);
         }
-        if (alternativeText != null) {
-            alternative.setAlternativeText(alternativeText);
-        }
-        alternativeRepository.save(alternative);
+        return alternative;
+    }
+
+    public List<Long> deleteAllAlternatives() {
+        List<Long> alternativeIds = alternativeRepository.getAllIds();
+        alternativeRepository.deleteAll();
+        return alternativeIds;
     }
 }

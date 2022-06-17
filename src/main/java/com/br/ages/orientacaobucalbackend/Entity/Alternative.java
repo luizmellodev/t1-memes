@@ -1,6 +1,5 @@
 package com.br.ages.orientacaobucalbackend.Entity;
 
-import com.br.ages.orientacaobucalbackend.enums.AlternativeCriticalLevel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
@@ -29,5 +28,5 @@ public class Alternative {
     
     @Getter
     @Setter
-    private AlternativeCriticalLevel criticalLevel;
+    private String criticalLevel;
 }

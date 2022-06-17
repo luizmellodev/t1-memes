@@ -77,8 +77,8 @@ public class QuestionService {
     }
 
     public List<Long> deleteAllQuestions() {
-        List<Long> ids = questionRepository.getAllIds();
+        List<Long> questionIds = questionRepository.getAllIds();
         questionRepository.deleteAll();
-        return ids;
+        return questionIds;
     }
 }

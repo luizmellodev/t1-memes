@@ -13,14 +13,9 @@ import java.util.Optional;
 @Service
 public class CategoryService {
 
-    private final CategoryRepository categoryRepository;
-    // private final ContentRepository contentRepository;
-
     @Autowired
-    public CategoryService(CategoryRepository categoryRepository) { //, ContentRepository contentRepository) {
-        this.categoryRepository = categoryRepository;
-        // this.contentRepository = contentRepository;
-    }
+    CategoryRepository categoryRepository;
+    // ContentRepository contentRepository;
 
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
@@ -52,15 +47,6 @@ public class CategoryService {
         }
     }
 
-    // public void save(Category category, Long content_id) {
-    //     Optional<Content> content = contentRepository.findById(content_id);
-    //     if (content.isPresent()) {
-    //         category.getContents().add(content.get());
-    //         System.out.println(category.getContents());
-    //         categoryRepository.saveAndFlush(category);
-    //     }
-    // }
-
     public Optional<Category> deleteCategoryById(Long categoryId) {
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isPresent()) {
@@ -75,4 +61,13 @@ public class CategoryService {
         categoryRepository.deleteAll();
         return categoryIds;
     }
+
+    // public void save(Category category, Long content_id) {
+    //     Optional<Content> content = contentRepository.findById(content_id);
+    //     if (content.isPresent()) {
+    //         category.getContents().add(content.get());
+    //         System.out.println(category.getContents());
+    //         categoryRepository.saveAndFlush(category);
+    //     }
+    // }
 }

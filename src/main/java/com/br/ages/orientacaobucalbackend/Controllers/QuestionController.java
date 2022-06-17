@@ -6,7 +6,7 @@ import com.br.ages.orientacaobucalbackend.Entity.Question;
 import com.br.ages.orientacaobucalbackend.Services.QuestionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,21 +19,16 @@ import java.util.Optional;
 @CrossOrigin
 public class QuestionController {
 
-    private final QuestionService questionService;
-
     @Autowired
-    public QuestionController(QuestionService questionService) {
-        this.questionService = questionService;
-    }
+    QuestionService questionService;
 
     @GetMapping
     public ResponseEntity<List<Question>> getQuestionsWithAlternatives() {
         List<Question> questions = questionService.getQuestionsWithAlternatives();
-        // HttpHeaders headers = new HttpHeaders();
-        // headers.add("Content-Range", String.valueOf(response.size()));
-        // headers.add("Access-Control-Expose-Headers", "Content-Range");
-        // return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
-        return new ResponseEntity<>(questions, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Range", String.valueOf(questions.size()));
+        headers.add("Access-Control-Expose-Headers", "Content-Range");
+        return new ResponseEntity<>(questions, headers, HttpStatus.OK);
     }
 
     @GetMapping(value="/{questionId}")

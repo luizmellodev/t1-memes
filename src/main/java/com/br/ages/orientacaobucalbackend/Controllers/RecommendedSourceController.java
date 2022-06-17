@@ -15,12 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 public class RecommendedSourceController {
 
-      private final RecommendedSourceService recommendedSourceService;
-
       @Autowired
-      public RecommendedSourceController(RecommendedSourceService recommendedSourceService) {
-            this.recommendedSourceService = recommendedSourceService;
-      }
+      RecommendedSourceService recommendedSourceService;
 
       @GetMapping("/{id}")
       public ResponseEntity<RecommendedSource> getRecommendedSources(@PathVariable Long id) {

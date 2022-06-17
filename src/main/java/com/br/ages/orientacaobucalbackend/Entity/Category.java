@@ -2,7 +2,6 @@ package com.br.ages.orientacaobucalbackend.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -19,17 +18,14 @@ public class Category {
 
     @Getter
     @Setter
-    @NonNull
     private String name;
 
     @Getter
     @Setter
-    @NonNull
     private String color;
 
     @Getter
     @Setter
-    @NonNull
     private String imageUrl;
 
     @Getter

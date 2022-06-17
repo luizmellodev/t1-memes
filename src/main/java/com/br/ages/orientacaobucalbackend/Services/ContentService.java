@@ -15,20 +15,15 @@ import java.util.regex.Pattern;
 @Service
 public class ContentService {
 
-    private final CategoryService categoryService;
-    private final ContentRepository contentRepository;
-    private final S3Service s3Service;
+    @Autowired
+    CategoryService categoryService;
+    @Autowired
+    ContentRepository contentRepository;
     private final String URL = "https://saude-velho.s3.us-east-2.amazonaws.com/panfleto/";
     private final String URI = "saude-velho";
     private final String prefix = "panfleto";
-    private final String urlIsValid = "^(https?://)?((www.)?youtube.com|youtu.be)/.+$"; 
-
-    @Autowired
-    public ContentService(CategoryService categoryService, ContentRepository contentRepository) {
-        this.categoryService = categoryService;
-        this.contentRepository = contentRepository;
-        this.s3Service = new S3Service(this.URI);
-    }
+    private final String urlIsValid = "^(https?://)?((www.)?youtube.com|youtu.be)/.+$";
+    private final S3Service s3Service = new S3Service(this.URI);
 
     public List<Content> getAllContents() {
         return contentRepository.findAll();

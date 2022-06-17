@@ -12,12 +12,8 @@ import java.util.List;
 @CrossOrigin
 public class AlternativeController {
 
-    private final AlternativeService alternativeService;
-
     @Autowired
-    public AlternativeController(AlternativeService alternativeService) {
-        this.alternativeService = alternativeService;
-    }
+    AlternativeService alternativeService;
 
     @GetMapping
     public List<Alternative> getAlternatives() {

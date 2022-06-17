@@ -31,12 +31,7 @@ public class AutoExamService {
     private final String STRFMT_OBJECT_NAME = "autoexam-%s.csv";
     private final String TITLE = "Autoexame";
     private final String[] HEADERS = {"Pergunta", "Resposta", "Criticidade"};
-
-    private S3Service s3Service;
-
-    public AutoExamService() {
-        this.s3Service = new S3Service(S3_URI);
-    }
+    private final S3Service s3Service = new S3Service(S3_URI);
 
     public ByteArrayInputStream createPDF(String objectName) throws DocumentException, IOException {
         byte[] csvBytes = s3Service.download(objectName, S3_PREFIX);
@@ -63,13 +58,13 @@ public class AutoExamService {
         return new ByteArrayInputStream(pdf.toByteArray());
     }
 
-    public String createCSV(Map<String, ArrayList> map) throws IOException {
+    public String createCSV(Map<String, ArrayList<String>> map) throws IOException {
         StringWriter output = new StringWriter();
         try (
                 ICsvListWriter listWriter = new CsvListWriter(output, CsvPreference.STANDARD_PREFERENCE)
             ) {
             listWriter.write(HEADERS[0], HEADERS[1], HEADERS[2]);
-            for (Map.Entry<String, ArrayList> entry : map.entrySet()){
+            for (Map.Entry<String, ArrayList<String>> entry : map.entrySet()){
                 listWriter.write(
                     entry.getKey(),
                     entry.getValue().get(0),

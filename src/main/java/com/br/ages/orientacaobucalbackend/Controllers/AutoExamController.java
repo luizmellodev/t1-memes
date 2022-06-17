@@ -19,12 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 public class AutoExamController {
 
-      private final AutoExamService autoexamService;
-
       @Autowired
-      public AutoExamController(AutoExamService pdfService) {
-            this.autoexamService = new AutoExamService();
-      }
+      AutoExamService autoexamService;
 
       @GetMapping("/pdf/{objectName}")
       public ResponseEntity<InputStreamResource> createPDF(@PathVariable String objectName)
@@ -40,7 +36,7 @@ public class AutoExamController {
       }
 
       @PostMapping("/csv")
-      public ResponseEntity<String> createCSV(@RequestBody Map<String, ArrayList> map)
+      public ResponseEntity<String> createCSV(@RequestBody Map<String, ArrayList<String>> map)
                   throws DocumentException, IOException {
             String objectNameJson = autoexamService.createCSV(map);
             return ResponseEntity

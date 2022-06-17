@@ -13,15 +13,10 @@ import java.util.Optional;
 @Service
 public class RecommendedSourceService {
 
-    private final ContentRepository contentRepository;
-    private final RecommendedSourceRepository recommendedSourceRepository;
-
     @Autowired
-    public RecommendedSourceService(RecommendedSourceRepository recommendedSourceRepository,
-            ContentRepository contentRepository) {
-        this.recommendedSourceRepository = recommendedSourceRepository;
-        this.contentRepository = contentRepository;
-    }
+    ContentRepository contentRepository;
+    @Autowired
+    RecommendedSourceRepository recommendedSourceRepository;
 
     public List<RecommendedSource> getRecommendedSourcesByContentId(Long contentId) {
         return recommendedSourceRepository.findAllRecommendedSources(contentId);

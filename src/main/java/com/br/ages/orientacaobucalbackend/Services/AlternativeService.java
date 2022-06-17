@@ -14,14 +14,10 @@ import java.util.Optional;
 @Service
 public class AlternativeService {
 
-    private final AlternativeRepository alternativeRepository;
-    private final QuestionRepository questionRepository;
-
     @Autowired
-    public AlternativeService(AlternativeRepository alternativeRepository, QuestionRepository questionRepository) {
-        this.alternativeRepository = alternativeRepository;
-        this.questionRepository = questionRepository;
-    }
+    AlternativeRepository alternativeRepository;
+    @Autowired
+    QuestionRepository questionRepository;
 
     /**
      * Get a list of all of the alternatives

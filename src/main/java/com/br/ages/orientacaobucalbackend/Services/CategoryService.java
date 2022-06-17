@@ -45,7 +45,7 @@ public class CategoryService {
             if (newCategory.getName() != null) {category.setName(newCategory.getName());}
             if (newCategory.getColor() != null) {category.setColor(newCategory.getColor());}
             if (newCategory.getImageUrl() != null) {category.setImageUrl(newCategory.getImageUrl());}
-            // if (newCategory.getContents() != null) {category.setContents(newCategory.getContents());} // never used
+            if (newCategory.getContents() != null) {category.setContents(newCategory.getContents());}
             return Optional.of(categoryRepository.save(category));
         } else {
             return Optional.empty();
@@ -71,8 +71,8 @@ public class CategoryService {
     }
 
     public List<Long> deleteAllCategories() {
-        List<Long> ids = categoryRepository.getAllIds();
+        List<Long> categoryIds = categoryRepository.getAllIds();
         categoryRepository.deleteAll();
-        return ids;
+        return categoryIds;
     }
 }

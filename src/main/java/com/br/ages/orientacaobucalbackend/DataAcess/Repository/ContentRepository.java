@@ -1,6 +1,9 @@
 package com.br.ages.orientacaobucalbackend.DataAcess.Repository;
 
 import com.br.ages.orientacaobucalbackend.Entity.Content;
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
@@ -29,4 +32,7 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
     @Modifying
     @Query(value = "DELETE FROM recommended_source r WHERE r.content_id =:contentId", nativeQuery = true)
     void deleteAllContentRecommendedSource(@Param("contentId") Long contentId);
+
+    @Query(value = "SELECT id FROM content", nativeQuery = true)
+    List<Long> getAllIds();
 }

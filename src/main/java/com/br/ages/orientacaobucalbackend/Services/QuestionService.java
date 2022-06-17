@@ -19,22 +19,22 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
 
     @Autowired
-    public QuestionService(QuestionRepository questionRepository) {
-        this.questionRepository = questionRepository;
-    }
-
-    @Autowired
     AlternativeController alternativeController;
 
     @Autowired
     AlternativeRepository alternativeRepository;
 
+    @Autowired
+    public QuestionService(QuestionRepository questionRepository) {
+        this.questionRepository = questionRepository;
+    }
+
     public List<Question> getQuestionsWithAlternatives() {
         return questionRepository.findAll();
     }
 
-    public Optional<Question> getQuestionById(Long id) {
-        return questionRepository.findById(id);
+    public Optional<Question> getQuestionById(Long questionId) {
+        return questionRepository.findById(questionId);
     }
 
     @Transactional

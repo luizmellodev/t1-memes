@@ -4,9 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import com.br.ages.orientacaobucalbackend.Services.RecommendedSourceService;
+import com.br.ages.orientacaobucalbackend.Common.EmptyJson;
+import com.br.ages.orientacaobucalbackend.Common.RecommendedSourceBadRequest;
 import com.br.ages.orientacaobucalbackend.Entity.RecommendedSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,78 +22,74 @@ public class RecommendedSourceController {
       @Autowired
       RecommendedSourceService recommendedSourceService;
 
-      @GetMapping("/{id}")
-      public ResponseEntity<RecommendedSource> getRecommendedSources(@PathVariable Long id) {
-            Optional<RecommendedSource> response = recommendedSourceService.getRecommendedSource(id);
-            if(response.isPresent()){
-            return ResponseEntity
-                        .ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(response.get());
+      @GetMapping
+      public ResponseEntity<List<RecommendedSource>> getAllRecommendedSources() {
+            List<RecommendedSource> recommendedSources = recommendedSourceService.getAllRecommendedSources();
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Range", String.valueOf(recommendedSources.size()));
+            headers.add("Access-Control-Expose-Headers", "Content-Range");
+            return new ResponseEntity<>(recommendedSources, headers, HttpStatus.OK);
+      }
+
+      @GetMapping("/content/{contentId}")
+      public ResponseEntity<?> getRecommendedSourcesByContentId(@PathVariable Long contentId) {
+            List<RecommendedSource> recommendedSources = recommendedSourceService.getRecommendedSourcesByContentId(contentId);
+            return new ResponseEntity<>(recommendedSources, HttpStatus.OK);
+      }
+
+      @GetMapping("/{sourceId}")
+      public ResponseEntity<?> getRecommendedSources(@PathVariable Long sourceId) {
+            Optional<RecommendedSource> recommendedSource = recommendedSourceService.getRecommendedSource(sourceId);
+            if(recommendedSource.isPresent()){
+                  return new ResponseEntity<>(recommendedSource.get(), HttpStatus.OK);
             }else{
-                  return ResponseEntity.notFound().build();
+                  return new ResponseEntity<>(new EmptyJson(), HttpStatus.NOT_FOUND);
             }
       }
 
-      @GetMapping("/content/{id}")
-      public ResponseEntity<List<RecommendedSource>> getRecommendedSourcesByContentId(Long contentId) {
-            List<RecommendedSource> response = recommendedSourceService.getRecommendedSourcesByContentId(contentId);
-            if (response.size() == 0) {
-                  return ResponseEntity
-                        .ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(response);
-            } else {
-                  return ResponseEntity
-                        .notFound()
-                        .build();
-            }
-      }
-
-      // POST = create link
       @PostMapping("/{contentId}")
-      public ResponseEntity<RecommendedSource> addNewRecommendedSource(@RequestBody RecommendedSource recommendedSource,
-                  @PathVariable Long contentId) {
-            Optional<RecommendedSource> response = recommendedSourceService.addNewRecommendedSource(recommendedSource, contentId);
-            if (response.isPresent()) {
-                  return ResponseEntity
-                        .ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(response.get());
-            } else {
-                  return ResponseEntity
-                        .notFound()
-                        .build();
+      public ResponseEntity<?> addNewRecommendedSource(@RequestBody RecommendedSource newRecommendedSource, 
+      @PathVariable Long contentId) {
+            try {
+                  Optional<RecommendedSource> recommendedSource = recommendedSourceService.addNewRecommendedSource(newRecommendedSource, contentId);
+                  if (recommendedSource.isPresent()) {
+                        return new ResponseEntity<>(recommendedSource, HttpStatus.OK);
+                  } else {
+                        return new ResponseEntity<>(new EmptyJson(), HttpStatus.NOT_FOUND);
+                  }
+            } catch (IllegalArgumentException error) {
+                  return new ResponseEntity<>(new RecommendedSourceBadRequest(), HttpStatus.BAD_REQUEST);
             }
       }
 
-      // PUT = Alternate/Update Link
-      @PutMapping("/{id}")
-      public ResponseEntity<RecommendedSource> updateRecommendedsource(@PathVariable Long id,
+      @PutMapping("/{sourceId}")
+      public ResponseEntity<?> updateRecommendedsource(@PathVariable Long sourceId,
                   @RequestBody RecommendedSource recommendedSource) {
-            Optional<RecommendedSource> response = recommendedSourceService.updateRecommendedsource(id, recommendedSource);
-            if (response.isPresent()) {
-                  return ResponseEntity
-                        .ok()
-                        .body(response.get());
-            } else {
-                  return ResponseEntity
-                        .notFound()
-                        .build();
+            try {
+                  Optional<RecommendedSource> updatedRecommendedSource = recommendedSourceService.updateRecommendedsource(sourceId, recommendedSource);
+                  if (updatedRecommendedSource.isPresent()) {
+                        return new ResponseEntity<>(updatedRecommendedSource, HttpStatus.OK);
+                  } else {
+                        return new ResponseEntity<>(new EmptyJson(), HttpStatus.NOT_FOUND);
+                  }
+            } catch (IllegalArgumentException error) {
+                  return new ResponseEntity<>(new RecommendedSourceBadRequest(), HttpStatus.BAD_REQUEST);
             }
       }
 
-      @DeleteMapping("/{id}")
-      public ResponseEntity<Long> deleteRecommendedSource(@PathVariable Long id) {
-            Optional<Long> response = recommendedSourceService.deleteRecommendedSource(id);
-            if (response.isPresent()) {
-                  return ResponseEntity
-                        .ok()
-                        .build();
+      @DeleteMapping("/{sourceId}")
+      public ResponseEntity<?> deleteRecommendedSourceById(@PathVariable Long sourceId) {
+            Optional<RecommendedSource> deletedRecommendedSourceService = recommendedSourceService.deleteRecommendedSourceById(sourceId);
+            if (deletedRecommendedSourceService.isPresent()) {
+                  return new ResponseEntity<>(deletedRecommendedSourceService, HttpStatus.OK);
             } else {
-                  return ResponseEntity
-                        .notFound()
-                        .build();
+                  return new ResponseEntity<>(new EmptyJson(), HttpStatus.NOT_FOUND);
             }
+      }
+
+      @DeleteMapping("/delete")
+      public ResponseEntity<?> deleteAllRecommendedSources() {
+            List<Long> recommendeSourceIds = recommendedSourceService.deleteAllRecommendedSources();
+            return new ResponseEntity<>(recommendeSourceIds, HttpStatus.OK);
       }
 }

@@ -12,6 +12,9 @@ import java.util.List;
 
 @Repository
 public interface RecommendedSourceRepository extends JpaRepository<RecommendedSource, Long> {
-    @Query(value = "SELECT * FROM recommended_source JOIN content ON content.id = recommendedSource.content_id", nativeQuery = true)
-    List<RecommendedSource> findAllRecommendedSources(@Param("content_id") Long content_id);
+    @Query(value = "SELECT * FROM recommended_source rs JOIN content c ON c.id = rs.content_id WHERE rs.content_id=:contentId", nativeQuery = true)
+    List<RecommendedSource> findAllRecommendedSourcesByContentId(@Param("contentId") Long contentId);
+
+    @Query(value = "SELECT id FROM recommended_source", nativeQuery = true)
+    List<Long> getAllIds();
 }

@@ -35,7 +35,6 @@ public class AlternativeService {
             if ((alternative.getCriticalLevel() != null) && (alternative.getAlternativeText() != null)) {
                 if(EnumUtils.isValidEnum(AlternativeCriticalLevel.class, alternative.getCriticalLevel().toString())) {
                     alternative.setQuestion(question.get());
-                    System.out.println(alternative);
                     return Optional.of(alternativeRepository.save(alternative));
                 }
             }

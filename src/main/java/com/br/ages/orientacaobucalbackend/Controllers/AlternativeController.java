@@ -5,6 +5,7 @@ import com.br.ages.orientacaobucalbackend.Common.EmptyJson;
 import com.br.ages.orientacaobucalbackend.Entity.Alternative;
 import com.br.ages.orientacaobucalbackend.Services.AlternativeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,10 @@ public class AlternativeController {
     @GetMapping
     public ResponseEntity<List<Alternative>> getAllAlternatives() {
         List<Alternative> alternatives = alternativeService.getAllAlternatives();
-        return new ResponseEntity<>(alternatives, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Range", String.valueOf(alternatives.size()));
+        headers.add("Access-Control-Expose-Headers", "Content-Range");
+        return new ResponseEntity<>(alternatives, headers, HttpStatus.OK);
     }
 
     @PostMapping("/{questionId}")

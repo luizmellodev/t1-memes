@@ -5,6 +5,7 @@ import com.br.ages.orientacaobucalbackend.Common.EmptyJson;
 import com.br.ages.orientacaobucalbackend.Entity.Category;
 import com.br.ages.orientacaobucalbackend.Services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,11 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> response = categoryService.getAllCategories();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        List<Category> categories = categoryService.getAllCategories();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Range", String.valueOf(categories.size()));
+        headers.add("Access-Control-Expose-Headers", "Content-Range");
+        return new ResponseEntity<>(categories, headers, HttpStatus.OK);
     }
 
     @GetMapping("/{categoryId}")

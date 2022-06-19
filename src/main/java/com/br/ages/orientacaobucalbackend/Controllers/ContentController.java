@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin
@@ -41,7 +42,7 @@ public class ContentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addNewContent(@RequestBody Content newContent) {
+    public ResponseEntity<?> addNewContent(@RequestBody Map<String, Object> newContent) {
         Optional<Content> content = contentService.addNewContent(newContent);
         if (content.isPresent()) {
             return new ResponseEntity<>(content, HttpStatus.OK);
@@ -51,12 +52,11 @@ public class ContentController {
     }
 
     @PutMapping("/{contentId}")
-    public ResponseEntity<?> updateContent(@PathVariable Long contentId, @RequestBody Content newContent){
-        Optional <Content> updatedContent = contentService.updateContent(contentId, newContent);
+    public ResponseEntity<?> updateContent(@PathVariable Long contentId, @RequestBody Content newContent) {
+        Optional<Content> updatedContent = contentService.updateContent(contentId, newContent);
         if (updatedContent.isPresent()) {
-            return new ResponseEntity<>(updatedContent.get(), HttpStatus.OK);    
-        }
-        else {
+            return new ResponseEntity<>(updatedContent.get(), HttpStatus.OK);
+        } else {
             return new ResponseEntity<>(new EmptyJson(), HttpStatus.NOT_FOUND);
         }
     }
@@ -65,15 +65,15 @@ public class ContentController {
     public ResponseEntity<?> deleteContentById(@PathVariable Long contentId) {
         Optional<Content> deletedContent = contentService.deleteById(contentId);
         if (deletedContent.isPresent()) {
-            return new ResponseEntity<>(deletedContent, HttpStatus.OK);    
+            return new ResponseEntity<>(deletedContent, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(new EmptyJson(), HttpStatus.BAD_REQUEST);            
+            return new ResponseEntity<>(new EmptyJson(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteAllContents() {
-        List<Long> contentIds =  contentService.deleteAll();
+        List<Long> contentIds = contentService.deleteAll();
         return new ResponseEntity<>(contentIds, HttpStatus.OK);
     }
 }

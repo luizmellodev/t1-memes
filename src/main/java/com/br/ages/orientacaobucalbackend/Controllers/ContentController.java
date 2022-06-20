@@ -52,7 +52,7 @@ public class ContentController {
     }
 
     @PutMapping("/{contentId}")
-    public ResponseEntity<?> updateContent(@PathVariable Long contentId, @RequestBody Content newContent) {
+    public ResponseEntity<?> updateContent(@PathVariable Long contentId, @RequestBody Map<String, Object> newContent) {
         Optional<Content> updatedContent = contentService.updateContent(contentId, newContent);
         if (updatedContent.isPresent()) {
             return new ResponseEntity<>(updatedContent.get(), HttpStatus.OK);

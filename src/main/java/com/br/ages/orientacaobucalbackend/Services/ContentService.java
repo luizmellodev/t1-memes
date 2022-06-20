@@ -105,6 +105,7 @@ public class ContentService {
         }
 
         Content response = contentRepository.save(content);
+        this.updateCategories(response);
 
         if (newContent.get("recommendedSource") != null) {
             ArrayList<Map<String, String>> recommendedSource = (ArrayList<Map<String, String>>) newContent
@@ -122,31 +123,46 @@ public class ContentService {
         return Optional.of(response);
     }
 
-    public Optional<Content> updateContent(Long contentId, Content newContent) {
+    public Optional<Content> updateContent(Long contentId, Map<String, Object> newContent) {
         Optional<Content> oldContent = contentRepository.findById(contentId);
         if (oldContent.isPresent()) {
             Content content = oldContent.get();
-            if (newContent.getTitle() != null) {
-                content.setTitle(newContent.getTitle());
+            if (newContent.get("title") != null) {
+                content.setTitle(newContent.get("title").toString());
             }
-            if (newContent.getTextUrl() != null) {
-                content.setTextUrl(newContent.getTextUrl());
+            if (newContent.get("textUrl") != null) {
+                content.setTextUrl(newContent.get("textUrl").toString());
             }
-            if (newContent.getPanfletoUrl() != null) {
-                content.setPanfletoUrl(newContent.getPanfletoUrl());
+            if (newContent.get("panfleto") != null) {
+                content.setPanfleto(newContent.get("panfleto").toString());
+                String panfletoUrl = this.savePanfleto(content);
+                content.setPanfletoUrl(panfletoUrl);
+                content = contentRepository.save(content);
+                content.setPanfleto(newContent.get("panfleto").toString());
             }
-            if (newContent.getPanfleto() != null) {
-                content.setPanfleto(newContent.getPanfleto());
+            if (newContent.get("videoUrl") != null) {
+                Pattern pattern = Pattern.compile(this.urlIsValid);
+                Matcher match = pattern.matcher((CharSequence) newContent.get("videoUrl"));
+                if (match.matches()) {
+                    content.setVideoUrl(newContent.get("videoUrl").toString());
+                } else {
+                    return Optional.empty();
+                }
             }
-            if (newContent.getVideoUrl() != null) {
-                content.setVideoUrl(newContent.getVideoUrl());
-            }
-            if (newContent.getCategories() != null) {
+            if (newContent.get("categories_ids") != null) {
                 contentRepository.deleteCategoryContentByContentId(contentId);
-                content.setCategories(newContent.getCategories());
-                updateCategories(content);
+                ArrayList<Integer> categories_ids = (ArrayList<Integer>) newContent.get("categories_ids");
+                content.setCategories(generateCategories(categories_ids));
             }
-            return Optional.of(contentRepository.save(content));
+            if (newContent.get("recommendedSource") != null) {
+                contentRepository.deleteAllContentRecommendedSource(contentId);
+                ArrayList<Map<String, String>> recommendedSource = (ArrayList<Map<String, String>>) newContent
+                        .get("recommendedSource");
+                createRecommendedSources(recommendedSource, content);
+            }
+            Content response = contentRepository.save(content);
+            this.updateCategories(response);
+            return Optional.of(response);
         } else {
             return Optional.empty();
         }

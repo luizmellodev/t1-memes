@@ -104,6 +104,13 @@ public class ContentService {
             }
         }
 
+        if (newContent.get("panfleto") != null) {
+            response.setPanfleto(newContent.get("panfleto").toString());
+            String panfletoUrl = this.savePanfleto(response);
+            response.setPanfletoUrl(panfletoUrl);
+            response = contentRepository.save(response);
+        }
+
         return Optional.of(response);
     }
 

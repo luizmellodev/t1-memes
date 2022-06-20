@@ -57,6 +57,28 @@ public class ContentService {
         }
     }
 
+    public List<Category> generateCategories(ArrayList<Integer> categories_ids) {
+        List<Category> categories = new ArrayList<>();
+        for (Integer id : categories_ids) {
+            Optional<Category> search = categoryService.findCategoryById(id.longValue());
+            if (search.isPresent()) {
+                Category category = search.get();
+                categories.add(category);
+            }
+        }
+        return categories;
+    }
+
+    public void createRecommendedSources(ArrayList<Map<String, String>> recommendedSources, Content content) {
+        for (Map<String, String> source : recommendedSources) {
+            RecommendedSource recommendedSourceObject = new RecommendedSource();
+            recommendedSourceObject.setDescription(source.get("description").toString());
+            recommendedSourceObject.setLink(source.get("link").toString());
+            recommendedSourceObject.setTitle(source.get("title").toString());
+            recommendedSourceService.addNewRecommendedSource(recommendedSourceObject, content.getId());
+        }
+    }
+
     public Optional<Content> addNewContent(Map<String, Object> newContent) throws IllegalArgumentException {
         Content content = new Content();
 
@@ -78,16 +100,8 @@ public class ContentService {
         }
 
         if (newContent.get("categories_ids") != null) {
-            List<Category> categories = new ArrayList<>();
             ArrayList<Integer> categories_ids = (ArrayList<Integer>) newContent.get("categories_ids");
-            for (Integer id : categories_ids) {
-                Optional<Category> search = categoryService.findCategoryById(id.longValue());
-                if (search.isPresent()) {
-                    Category category = search.get();
-                    categories.add(category);
-                }
-            }
-            content.setCategories(categories);
+            content.setCategories(generateCategories(categories_ids));
         }
 
         Content response = contentRepository.save(content);
@@ -95,13 +109,7 @@ public class ContentService {
         if (newContent.get("recommendedSource") != null) {
             ArrayList<Map<String, String>> recommendedSource = (ArrayList<Map<String, String>>) newContent
                     .get("recommendedSource");
-            for (Map<String, String> source : recommendedSource) {
-                RecommendedSource recommendedSourceObject = new RecommendedSource();
-                recommendedSourceObject.setDescription(source.get("description").toString());
-                recommendedSourceObject.setLink(source.get("link").toString());
-                recommendedSourceObject.setTitle(source.get("title").toString());
-                recommendedSourceService.addNewRecommendedSource(recommendedSourceObject, response.getId());
-            }
+            createRecommendedSources(recommendedSource, response);
         }
 
         if (newContent.get("panfleto") != null) {

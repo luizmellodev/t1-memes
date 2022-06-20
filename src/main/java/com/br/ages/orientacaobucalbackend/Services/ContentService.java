@@ -3,6 +3,8 @@ package com.br.ages.orientacaobucalbackend.Services;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.ContentRepository;
 import com.br.ages.orientacaobucalbackend.Entity.Category;
 import com.br.ages.orientacaobucalbackend.Entity.Content;
+import com.br.ages.orientacaobucalbackend.Entity.RecommendedSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ public class ContentService {
 
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    RecommendedSourceService recommendedSourceService;
     @Autowired
     ContentRepository contentRepository;
     private final String URL = "https://saude-velho.s3.us-east-2.amazonaws.com/panfleto/";
@@ -55,16 +59,14 @@ public class ContentService {
 
     public Optional<Content> addNewContent(Map<String, Object> newContent) throws IllegalArgumentException {
         Content content = new Content();
+
         if ((newContent.get("title") == null) || (newContent.get("textUrl") == null)) {
             return Optional.empty();
         } else {
             content.setTitle((String) newContent.get("title"));
             content.setTextUrl((String) newContent.get("textUrl"));
         }
-        // if (newContent.getPanfleto() != null) {
-        // String panfletoUrl = this.savePanfleto(newContent);
-        // newContent.setPanfletoUrl(panfletoUrl);
-        // }
+
         if (newContent.get("videoUrl") != null) {
             Pattern pattern = Pattern.compile(this.urlIsValid);
             Matcher match = pattern.matcher((CharSequence) newContent.get("videoUrl"));
@@ -88,7 +90,21 @@ public class ContentService {
             content.setCategories(categories);
         }
 
-        return Optional.of(contentRepository.save(content));
+        Content response = contentRepository.save(content);
+
+        if (newContent.get("recommendedSource") != null) {
+            ArrayList<Map<String, String>> recommendedSource = (ArrayList<Map<String, String>>) newContent
+                    .get("recommendedSource");
+            for (Map<String, String> source : recommendedSource) {
+                RecommendedSource recommendedSourceObject = new RecommendedSource();
+                recommendedSourceObject.setDescription(source.get("description").toString());
+                recommendedSourceObject.setLink(source.get("link").toString());
+                recommendedSourceObject.setTitle(source.get("title").toString());
+                recommendedSourceService.addNewRecommendedSource(recommendedSourceObject, response.getId());
+            }
+        }
+
+        return Optional.of(response);
     }
 
     public Optional<Content> updateContent(Long contentId, Content newContent) {

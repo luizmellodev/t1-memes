@@ -1,7 +1,6 @@
 package com.br.ages.orientacaobucalbackend.Entity;
 
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -17,12 +16,12 @@ public class Content {
 
     @Getter
     @Setter
-    @NonNull
+    @Lob
+    @Column
     private String textUrl;
 
     @Getter
     @Setter
-    @NonNull
     private String title;
 
     @Getter
@@ -49,8 +48,8 @@ public class Content {
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecommendedSource> recommendedSource;
 
-    @Getter
-    @Setter
-    @Transient
-    private List<Long> categories_ids;
+    // @Getter
+    // @Setter
+    // @Transient
+    // private List<Long> categories_ids;
 }

@@ -7,65 +7,91 @@ import com.br.ages.orientacaobucalbackend.Entity.Content;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.RecommendedSourceRepository;
 import com.br.ages.orientacaobucalbackend.DataAcess.Repository.ContentRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class RecommendedSourceService {
 
-    private final ContentRepository contentRepository;
-    private final RecommendedSourceRepository recommendedSourceRepository;
-
     @Autowired
-    public RecommendedSourceService(RecommendedSourceRepository recommendedSourceRepository,
-            ContentRepository contentRepository) {
-        this.recommendedSourceRepository = recommendedSourceRepository;
-        this.contentRepository = contentRepository;
-    }
+    ContentRepository contentRepository;
+    @Autowired
+    RecommendedSourceRepository recommendedSourceRepository;
+    
+    private final String urlIsValid = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+
 
     public List<RecommendedSource> getRecommendedSourcesByContentId(Long contentId) {
-        return recommendedSourceRepository.findAllRecommendedSources(contentId);
+        Optional<Content> content = contentRepository.findById(contentId);
+        if (content.isPresent()) {
+            return recommendedSourceRepository.findAllRecommendedSourcesByContentId(contentId);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
-    public Optional<RecommendedSource> getRecommendedSource(Long id) {
-        return recommendedSourceRepository.findById(id);
+    public List<RecommendedSource> getAllRecommendedSources() {
+        return recommendedSourceRepository.findAll();
+    }
+
+    public Optional<RecommendedSource> getRecommendedSource(Long sourceId) {
+        return recommendedSourceRepository.findById(sourceId);
     }
 
     public Optional<RecommendedSource> addNewRecommendedSource(RecommendedSource recommendedSource, Long contentId) {
         Optional<Content> content = contentRepository.findById(contentId);
         if (content.isPresent()) {
-            recommendedSource.setContent(content.get());
-            recommendedSourceRepository.save(recommendedSource);
-            return Optional.of(recommendedSource);
+            if ((recommendedSource.getDescription() != null) && 
+             (recommendedSource.getLink() != null) && 
+             (recommendedSource.getTitle() != null)) {
+                Pattern pattern = Pattern.compile(this.urlIsValid);
+                Matcher match = pattern.matcher(recommendedSource.getLink());
+                if (match.matches()) {
+                    recommendedSource.setContent(content.get());
+                    return Optional.of(recommendedSourceRepository.save(recommendedSource));
+                }
+            }
+            throw new IllegalArgumentException();
         }
-
-        
         return Optional.empty();
     }
 
-    public Optional<RecommendedSource> updateRecommendedsource(Long id, RecommendedSource recommendedSource) {
-        Optional<RecommendedSource> oldResponse = recommendedSourceRepository.findById(id);
+    public Optional<RecommendedSource> updateRecommendedsource(Long sourceId, RecommendedSource newRecommendedSource) {
+        Optional<RecommendedSource> oldResponse = recommendedSourceRepository.findById(sourceId);
         if (oldResponse.isPresent()) {
-            RecommendedSource rs = oldResponse.get();
-            rs.setContent(recommendedSource.getContent());
-            rs.setDescription(recommendedSource.getDescription());
-            rs.setLink(recommendedSource.getLink());
-            rs.setTitle(recommendedSource.getTitle());
-            recommendedSourceRepository.save(rs);
-            return Optional.of(rs);
-        }else {
+            RecommendedSource recommendedSource = oldResponse.get();
+            if (newRecommendedSource.getContent() != null) {recommendedSource.setContent(newRecommendedSource.getContent());}
+            if (newRecommendedSource.getDescription() != null) {recommendedSource.setDescription(newRecommendedSource.getDescription());}
+            if (newRecommendedSource.getTitle() != null) {recommendedSource.setTitle(newRecommendedSource.getTitle());}
+            if (newRecommendedSource.getLink() != null) {
+                Pattern pattern = Pattern.compile(this.urlIsValid);
+                Matcher match = pattern.matcher(newRecommendedSource.getLink());
+                if (match.matches()) {
+                    recommendedSource.setLink(newRecommendedSource.getLink());
+                } else {
+                    throw new IllegalArgumentException();
+                }               
+            }
+            return Optional.of(recommendedSourceRepository.save(recommendedSource));
+        } else {
             return Optional.empty();
         }
     }
 
-    public Optional<Long> deleteRecommendedSource(Long id) {
-        boolean exists = recommendedSourceRepository.existsById(id);
-
-        if (!exists) {
-            return Optional.empty();
+    public Optional<RecommendedSource> deleteRecommendedSourceById(Long sourceId) {
+        Optional<RecommendedSource> recommendedSource = recommendedSourceRepository.findById(sourceId);
+        if (recommendedSource.isPresent()) {
+            recommendedSourceRepository.deleteById(sourceId);
         }
+        return recommendedSource;
+    }
 
-        recommendedSourceRepository.deleteById(id);
-        return Optional.of(id);
+    public List<Long> deleteAllRecommendedSources() {
+        List<Long> recommendedSourceIds = recommendedSourceRepository.getAllIds();
+        recommendedSourceRepository.deleteAll();
+        return recommendedSourceIds;
     }
 }

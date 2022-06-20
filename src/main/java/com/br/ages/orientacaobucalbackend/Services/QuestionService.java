@@ -8,92 +8,77 @@ import com.br.ages.orientacaobucalbackend.Entity.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 @Service
 public class QuestionService {
 
-    private final QuestionRepository questionRepository;
-
     @Autowired
-    public QuestionService(QuestionRepository questionRepository) {
-        this.questionRepository = questionRepository;
-    }
-
+    QuestionRepository questionRepository;
     @Autowired
     AlternativeController alternativeController;
-
     @Autowired
     AlternativeRepository alternativeRepository;
 
-    public Question getQuestion(Long id) {
-        return questionRepository.getById(id);
-    }
-
     public List<Question> getQuestionsWithAlternatives() {
-        List<Question> q = questionRepository.findAll();
-        return q;
+        return questionRepository.findAll();
     }
 
-    public Question getQuestionById(Long id) {
-        Optional<Question> question = questionRepository.findById(id);
-        if (question.isPresent()) {
-            return question.get();
-        } else {
-            return null;
-        }
+    public Optional<Question> getQuestionById(Long questionId) {
+        return questionRepository.findById(questionId);
     }
-    public Question addNewQuestion(Question question) {
-        try{
-            questionRepository.save(question);
-            for(Alternative alternative : question.getAlternatives()){
-                alternativeController.registerNewAlternative(question.getId(), alternative);
+
+    @Transactional
+    public Optional<Question> addNewQuestion(Question newQuestion) throws IllegalArgumentException {
+        List<Alternative> alternatives = newQuestion.getAlternatives();
+        if ((alternatives != null) && (alternatives.size() >= 2) && (alternatives.size() <= 3)) {
+            for(Alternative alternative : newQuestion.getAlternatives()){
+                alternative.setQuestion(newQuestion);
             }
-            return question;
-        } catch (Exception e) { e.printStackTrace(); }
-        return null;
-    }
-
-    public void deleteQuestion(Long questionId) {
-        questionRepository.deleteQuestionAlternatives(questionId);
-        questionRepository.deleteQuestion(questionId);
-    }
-
-    /**
-     * Delete a question by id
-     *
-     * @param questionId The id of the question to be deleted
-     */
-    public Question deleteQuestionById(Long questionId) throws IOException {
-        boolean exists = questionRepository.existsById(questionId);
-        if (exists) {
-            Question questionToBeDeleted = getQuestionById(questionId);
-            deleteQuestion(questionId);
-            return questionToBeDeleted;
+            return Optional.of(questionRepository.save(newQuestion));
         } else {
-            throw new NullPointerException("this content doesn't exist.");
-        }
+            return Optional.empty();
+        }   
     }
 
-    public Question updateQuestion(Long id, Question newQuestion) {
-        Optional<Question> oldQuestion = questionRepository.findById(id);
-        if (oldQuestion.isPresent()) {
-            Question question = oldQuestion.get();
-            question.setQuestionText(newQuestion.getQuestionText());
-            questionRepository.deleteQuestionAlternatives(id);
-
-            if(!(newQuestion.getAlternatives().isEmpty())) {
-                for(Alternative alternative : newQuestion.getAlternatives()) {
-                    alternativeController.registerNewAlternative(question.getId(), alternative);
+    public Optional<Question> updateQuestion(Long questionId, Question newQuestion) throws IllegalArgumentException {
+        Optional<Question> question = questionRepository.findById(questionId);
+        if (question.isPresent()) {
+            if (newQuestion.getQuestionText() != null) {
+                question.get().setQuestionText(newQuestion.getQuestionText());
+            }
+            List<Alternative> alternatives = newQuestion.getAlternatives();
+            if (alternatives != null) {
+                if ((alternatives.size() >= 2) && (alternatives.size() <= 3)) {
+                    questionRepository.deleteQuestionAlternatives(questionId);
+                    for(Alternative newAlternative : alternatives) {
+                        alternativeController.registerNewAlternative(question.get().getId(), newAlternative);
+                    }
+                } else {
+                    throw new IllegalArgumentException();
                 }
             }
-
-            return newQuestion;
+            return Optional.of(questionRepository.save(question.get()));
         } else {
-            throw new NullPointerException("this question doesn't exist.");
+            return Optional.empty();
         }
     }
 
+    public Optional<Question> deleteQuestionById(Long questionId) {
+        Optional<Question> question = getQuestionById(questionId);
+        if (question.isPresent()) {
+            questionRepository.deleteQuestionAlternatives(questionId);
+            questionRepository.deleteById(questionId);
+        }
+        return question;
+    }
+
+    public List<Long> deleteAllQuestions() {
+        List<Long> questionIds = questionRepository.getAllIds();
+        questionRepository.deleteAll();
+        return questionIds;
+    }
 }

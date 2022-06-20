@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.Type;
+
 import java.util.List;
 
 @Entity
@@ -18,6 +21,7 @@ public class Content {
     @Setter
     @Lob
     @Column
+    @Type(type = "org.hibernate.type.TextType")
     private String textUrl;
 
     @Getter

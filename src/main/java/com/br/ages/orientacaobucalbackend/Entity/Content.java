@@ -51,9 +51,4 @@ public class Content {
     @Setter
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecommendedSource> recommendedSource;
-
-    // @Getter
-    // @Setter
-    // @Transient
-    // private List<Long> categories_ids;
 }

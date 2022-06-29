@@ -184,25 +184,4 @@ public class ContentService {
         contentRepository.deleteAll();
         return contentIds;
     }
-
-    // public Content getById(Long id) {
-    // Content content = this.findById(id).get();
-    // content.setCategories_ids(new ArrayList<>());
-    // for (Category category : content.getCategories()) {
-    // content.getCategories_ids().add(category.getId());
-    // }
-    // return content;
-    // }
-
-    // public void updateCategories(Content content) {
-    // for (int i = 1; i <= content.getCategories_ids().size(); i++) {
-    // Optional<Category> aux =
-    // categoryService.findCategoryById(content.getCategories_ids().get(i - 1));
-    // if (aux.isPresent()) {
-    // aux.get().getContents().add(content);
-    // categoryService.updateCategory(aux.get().getId(), aux.get());
-    // }
-    // }
-    // }
-
 }

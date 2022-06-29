@@ -7,7 +7,6 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-// import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.core.ResponseBytes;
@@ -21,29 +20,24 @@ public class S3Service {
     public S3Service(String uri) {
         this.uri = uri;
         this.s3 = S3Client.builder()
-            .region(Region.US_EAST_2)
-            .credentialsProvider(
-                StaticCredentialsProvider.create(
-                    AwsBasicCredentials.create(
-                        "AKIAQNTVEQCNGOWL6LLD", 
-                        "6amACdViuSTp6zmeZ+nD+61oFNJ2NJbe9NTgmvzV"
-                    )
-                )
-                // EnvironmentVariableCredentialsProvider.create()
-            )
-            .build();
+                .region(Region.US_EAST_2)
+                .credentialsProvider(
+                        StaticCredentialsProvider.create(
+                                AwsBasicCredentials.create(
+                                        "AKIAQNTVEQCNGOWL6LLD",
+                                        "6amACdViuSTp6zmeZ+nD+61oFNJ2NJbe9NTgmvzV")))
+                .build();
     }
 
     public String upload(String objectName, String prefix, byte[] object) {
         try {
             PutObjectRequest putRequest = PutObjectRequest.builder()
-                .bucket(this.uri)
-                .key(prefix+"/"+objectName)
-                .build();
+                    .bucket(this.uri)
+                    .key(prefix + "/" + objectName)
+                    .build();
             PutObjectResponse response = s3.putObject(
-                putRequest, 
-                RequestBody.fromBytes(object)
-            );
+                    putRequest,
+                    RequestBody.fromBytes(object));
             return response.eTag();
         } catch (S3Exception e) {
             System.err.println(e);
@@ -54,10 +48,10 @@ public class S3Service {
     public byte[] download(String objectName, String prefix) {
         try {
             GetObjectRequest getRequest = GetObjectRequest.builder()
-                .bucket(this.uri)
-                .key(prefix+"/"+objectName)
-                .build();
-            ResponseBytes <GetObjectResponse> objectBytes = s3.getObjectAsBytes(getRequest);
+                    .bucket(this.uri)
+                    .key(prefix + "/" + objectName)
+                    .build();
+            ResponseBytes<GetObjectResponse> objectBytes = s3.getObjectAsBytes(getRequest);
             return objectBytes.asByteArray();
         } catch (S3Exception e) {
             System.err.println(e);

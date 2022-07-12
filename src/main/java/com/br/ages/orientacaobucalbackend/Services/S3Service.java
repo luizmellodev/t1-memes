@@ -21,7 +21,7 @@ public class S3Service {
     public S3Service(String uri) {
         this.uri = uri;
         this.s3 = S3Client.builder()
-            .region(Region.US_EAST_2)
+            .region(Region.US_EAST_1)
             .credentialsProvider(
                 StaticCredentialsProvider.create(
                     AwsBasicCredentials.create(

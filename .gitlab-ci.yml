@@ -44,9 +44,9 @@ build:
   only:
     - main
   script:
-    - docker build -t saude-velho-backend .
-    - "docker tag saude-velho-backend:latest \
-      029236691098.dkr.ecr.us-east-2.amazonaws.com/saude-velho-backend:latest"
+    - docker build -t odontogeriatria-backend .
+    - "docker tag odontogeriatria-backend:latest \
+      973629880819.dkr.ecr.us-east-1.amazonaws.com/odontogeriatria-backend:latest"
 
 ########
 # PUSH #
@@ -61,9 +61,9 @@ push:
     - pip install awscli && apk --purge -v del py-pip
     - "aws ecr get-login-password --region us-east-2 \
       | docker login --username AWS --password-stdin \
-      029236691098.dkr.ecr.us-east-2.amazonaws.com"
+      973629880819.dkr.ecr.us-east-1.amazonaws.com"
   script:
-    - docker push 029236691098.dkr.ecr.us-east-2.amazonaws.com/saude-velho-backend:latest
+    - docker push 973629880819.dkr.ecr.us-east-1.amazonaws.com/odontogeriatria-backend:latest
 
 ##########
 # DEPLOY #
@@ -93,4 +93,4 @@ deploy:
       -e POSTGRES_PORT=5432 \
       -e SERVER_PORT=3000 \
       --publish published=3000,target=3000 \
-      029236691098.dkr.ecr.us-east-2.amazonaws.com/saude-velho-backend:latest"
+      973629880819.dkr.ecr.us-east-1.amazonaws.com/odontogeriatria-backend:latest"

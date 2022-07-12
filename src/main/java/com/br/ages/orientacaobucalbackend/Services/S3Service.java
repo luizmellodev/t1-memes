@@ -25,8 +25,8 @@ public class S3Service {
             .credentialsProvider(
                 StaticCredentialsProvider.create(
                     AwsBasicCredentials.create(
-                        "AKIAQNTVEQCNGOWL6LLD", 
-                        "6amACdViuSTp6zmeZ+nD+61oFNJ2NJbe9NTgmvzV"
+                        "AKIA6FMG47HZTJHCJYU4", 
+                        "oCRNd2PVsev2D3P45eQhGAoOkD6xCpnw2lxKMCUM"
                     )
                 )
                 // EnvironmentVariableCredentialsProvider.create()

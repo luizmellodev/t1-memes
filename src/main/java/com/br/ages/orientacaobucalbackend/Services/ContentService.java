@@ -25,9 +25,9 @@ public class ContentService {
     RecommendedSourceService recommendedSourceService;
     @Autowired
     ContentRepository contentRepository;
-    private final String URL = "https://saude-velho.s3.us-east-2.amazonaws.com/panfleto/";
-    private final String URI = "saude-velho";
-    private final String prefix = "panfleto";
+    private final String URL = "https://odontogeriatria-panfletos.s3.amazonaws.com/panfletos/";
+    private final String URI = "odontogeriatria-panfletos";
+    private final String prefix = "panfletos";
     private final String urlIsValid = "^(https?://)?((www.)?youtube.com|youtu.be)/.+$";
     private final S3Service s3Service = new S3Service(this.URI);
 

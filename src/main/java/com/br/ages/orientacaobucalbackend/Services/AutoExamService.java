@@ -25,7 +25,7 @@ import java.util.Map;
 @Service
 public class AutoExamService {
 
-    private final String S3_URI = "saude-velho";
+    private final String S3_URI = "odontogeriatria";
     private final String S3_PREFIX = "autoexam-results";
     private final String KEY_OBJECT_NAME = "objectName";
     private final String STRFMT_OBJECT_NAME = "autoexam-%s.csv";

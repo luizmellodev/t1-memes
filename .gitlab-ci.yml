@@ -59,7 +59,7 @@ push:
   before_script:
     - apk add --update --no-cache curl python3 py3-pip build-base openssh-client
     - pip install awscli && apk --purge -v del py-pip
-    - "aws ecr get-login-password --region us-east-2 \
+    - "aws ecr get-login-password --region us-east-1 \
       | docker login --username AWS --password-stdin \
       973629880819.dkr.ecr.us-east-1.amazonaws.com"
   script:
@@ -80,11 +80,11 @@ deploy:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - docker context create --docker host=ssh://ec2-user@"$SWARM_HOST" swarm
   script:
-    - docker --context swarm service rm saude-velho-backend 2>/dev/null || true
+    - docker --context swarm service rm odontogeriatria-backend 2>/dev/null || true
     - "docker --context swarm service create \
       --with-registry-auth \
       --replicas=1 \
-      --name saude-velho-backend \
+      --name odontogeriatria-backend \
       --network backend \
       -e POSTGRES_DB=orientacao-bucal \
       -e POSTGRES_USER=$POSTGRES_USER \

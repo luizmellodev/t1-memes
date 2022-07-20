@@ -20,3 +20,4 @@
 
 [1]: https://projectlombok.org/api/lombok/package-summary.html
 [2]: https://junit.org/junit4/javadoc/latest/
+
